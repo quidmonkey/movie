@@ -1,0 +1,25 @@
+{
+  "movies": [
+    {
+      "title": "Star Wars: Episode IV - A New Hope",
+      "format": "Streaming",
+      "length": "121 min",
+      "releaseYear": "1977",
+      "rating": "5"
+    },
+    {
+      "title": "Star Wars: Episode V - The Empire Strikes Back",
+      "format": "Streaming",
+      "length": "124 min",
+      "releaseYear": "1980",
+      "rating": "5"
+    },
+    {
+      "title": "Star Wars: Episode VI - Return of the Jedi",
+      "format": "Streaming",
+      "length": "131 min",
+      "releaseYear": "1983",
+      "rating": "5"
+    }
+  ]
+}
