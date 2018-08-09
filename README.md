@@ -5,6 +5,8 @@ layout: Doc
 -->
 # Serverless REST API
 
+This is a fork of the Serverless [aws-node-rest-api-with-dynamodb](https://github.com/serverless/examples/tree/master/aws-node-rest-api-with-dynamodb) project.
+
 This example demonstrates how to setup a [RESTful Web Services](https://en.wikipedia.org/wiki/Representational_state_transfer#Applied_to_web_services) allowing you to create, list, get, update and delete Movies. DynamoDB is used to store the data. This is just an example and of course you could use any data storage as a backend.
 
 ## Structure
@@ -21,7 +23,7 @@ The idea behind the `todos` directory is that in case you want to create a servi
 ## Setup
 
 ```bash
-npm install && npm install -g serverless && serverless install dynamodb
+npm install
 ```
 
 ## Deploy
