@@ -76,7 +76,8 @@ functions:
 resources:
   Resources:
     MoviesDynamoDbTable:
-      Type: AWS::DynamoDB::Table
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
       Properties:
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
         AttributeDefinitions:
