@@ -4,11 +4,13 @@ const Joi = require('joi');
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
-const { schema } = require('./config');
+const config = require('./config');
 
 module.exports.update = (event, context, callback) => {
-  const timestamp = new Date().getTime();
+  const timestamp = Date.now();
   const data = JSON.parse(event.body);
+  const { format, length, releaseYear, rating } = config.schema;
+  const schema = Joi.object().keys({ format, length, releaseYear, rating });
   const certificate = Joi.validate(data, schema);
 
   // validation
@@ -17,7 +19,7 @@ module.exports.update = (event, context, callback) => {
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t update the todo item.',
+      body: 'Couldn\'t update the movie.',
     });
     return;
   }
@@ -25,17 +27,21 @@ module.exports.update = (event, context, callback) => {
   const params = {
     TableName: process.env.DYNAMODB_TABLE,
     Key: {
-      id: event.pathParameters.id,
+      title: decodeURIComponent(event.pathParameters.title),
     },
+    // Need to define these as format and length are DynamoDb keywords
     ExpressionAttributeNames: {
-      '#todo_text': 'text',
+      '#movie_format': 'format',
+      '#movie_length': 'length'
     },
     ExpressionAttributeValues: {
-      ':text': data.text,
-      ':checked': data.checked,
-      ':updatedAt': timestamp,
+      ':format': data.format,
+      ':length': data.length,
+      ':releaseYear': data.releaseYear,
+      ':rating': data.rating,
+      ':updatedAt': timestamp
     },
-    UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
+    UpdateExpression: 'SET #movie_format = :format, #movie_length = :length, releaseYear = :releaseYear, rating = :rating, updatedAt = :updatedAt',
     ReturnValues: 'ALL_NEW',
   };
 
@@ -47,7 +53,7 @@ module.exports.update = (event, context, callback) => {
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the movies.',
+        body: 'Couldn\'t fetch the movie.',
       });
       return;
     }

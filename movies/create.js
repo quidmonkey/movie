@@ -5,11 +5,12 @@ const uuid = require('uuid');
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
-const { schema } = require('./config');
+const config = require('./config');
 
 module.exports.create = (event, context, callback) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
+  const schema = Joi.object().keys(config.schema);
   const certificate = Joi.validate(data, schema);
 
   if (certificate.error) {

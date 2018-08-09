@@ -107,16 +107,16 @@ Example Result:
 {"createdAt":1533839341492,"format":"Streaming","length":"121 min","rating":"5","id":"166d7560-9c02-11e8-8425-67e3a8988850","title":"Star Wars: Episode IV - A New Hope","releaseYear":"1977","updatedAt":1533839341492}%
 ```
 
-### Update a Todo
+### Update a Movie
 
 ```bash
-# Replace the <id> part with a real id from your todos table
-curl -X PUT https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id> --data '{ "text": "Learn Serverless", "checked": true }'
+curl -X PUT "$( echo 'http://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )" --data '{ "format": "DVD", "length": "125 min", "releaseYear": "2001", "rating": "4" }'
 ```
+
 
 Example Result:
 ```bash
-{"text":"Learn Serverless","id":"ee6490d0-aa81-11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":true,"updatedAt":1479138570824}%
+{"createdAt":1533842156671,"format":"DVD","length":"125 min","rating":"4","id":"a467d620-9c08-11e8-8221-55c4a1a87d0f","title":"Star Wars: Episode IV - A New Hope","releaseYear":"2001","updatedAt":1533842317303}%
 ```
 
 ### Delete a Movie
