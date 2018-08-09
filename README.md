@@ -22,6 +22,8 @@ The idea behind the `todos` directory is that in case you want to create a servi
 
 ## Setup
 
+You will first need to setup your [AWS credentials](https://github.com/serverless/serverless/blob/master/docs/providers/aws/guide/credentials.md) in order to use the serverless framework.
+
 ```bash
 npm install
 ```
@@ -71,7 +73,12 @@ Run serverless locally with the following command:
 npm run dev
 ```
 
-You can create, retrieve, update, or delete movies with the following commands:
+Once serverless-offline is up & running, you can populate DynamoDB with the following command:
+```bash
+node load-movies.js
+```
+
+You can create, retrieve, update, or delete movies locally with the following commands:
 
 ### Create a Movie
 
