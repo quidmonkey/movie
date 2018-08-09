@@ -75,7 +75,7 @@ functions:
 
 resources:
   Resources:
-    ${self:provider.environment.DYNAMODB_TABLE}:
+    MoviesDynamoDbTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
