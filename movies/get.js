@@ -1,13 +1,13 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const ddb = require('serverless-dynamodb-client');
+const dynamoDb = ddb.doc;
 
 module.exports.get = (event, context, callback) => {
   const params = {
     TableName: process.env.DYNAMODB_TABLE,
     Key: {
-      title: event.pathParameters.title,
+      title: decodeURIComponent(event.pathParameters.title)
     },
   };
 

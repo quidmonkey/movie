@@ -18,6 +18,12 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
+custom:
+  dynamodb:
+    start:
+      inMemory: true
+      migrate: true
+
 functions:
   create:
     handler: movies/create.create
@@ -59,24 +65,29 @@ functions:
           method: delete
           cors: true
 
+  schema:
+    handler: movies/schema.schema
+    events:
+      - http:
+          path: movies/schema
+          method: get
+          cors: true
+
 resources:
   Resources:
-    MoviesDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
+    ${self:provider.environment.DYNAMODB_TABLE}:
+      Type: AWS::DynamoDB::Table
       Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
         AttributeDefinitions:
-          -
-            AttributeName: id
+          - AttributeName: title
             AttributeType: S
         KeySchema:
-          -
-            AttributeName: id
+          - AttributeName: title
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
 
 plugins:
   - serverless-dynamodb-local

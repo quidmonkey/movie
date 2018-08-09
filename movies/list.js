@@ -1,8 +1,8 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const ddb = require('serverless-dynamodb-client');
+const dynamoDb = ddb.doc;
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const params = {
   TableName: process.env.DYNAMODB_TABLE,
 };

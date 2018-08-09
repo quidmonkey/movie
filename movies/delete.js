@@ -1,8 +1,7 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const ddb = require('serverless-dynamodb-client');
+const dynamoDb = ddb.doc;
 
 module.exports.delete = (event, context, callback) => {
   const params = {

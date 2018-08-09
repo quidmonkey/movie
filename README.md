@@ -84,27 +84,27 @@ Example Result:
 {"id":"af34dd50-9bea-11e8-a01a-c334472b9029","createdAt":1533829289891,"updatedAt":1533829289891,"title":"Star Wars: Episode IV - A New Hope","format":"Streaming","length":"121 min","releaseYear":"1977","rating":"5"}%
 ```
 
-### List all Todos
+### List all Movies
 
 ```bash
-curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos
+curl http://localhost:3000/movies
 ```
 
 Example output:
 ```bash
-[{"text":"Deploy my first service","id":"ac90fe80-aa83-11e6-9ede-afdfa051af86","checked":true,"updatedAt":1479139961304},{"text":"Learn Serverless","id":"20679390-aa85-11e6-9ede-afdfa051af86","createdAt":1479139943241,"checked":false,"updatedAt":1479139943241}]%
+[{"length":"121 min","rating":"5","updatedAt":1533829289891,"releaseYear":"1977","createdAt":1533829289891,"id":"af34dd50-9bea-11e8-a01a-c334472b9029","format":"Streaming","title":"Star Wars: Episode IV - A New Hope"},{"length":"121 min","rating":"5","updatedAt":1533829964000,"releaseYear":"1977","createdAt":1533829964000,"id":"4101e330-9bec-11e8-915e-1bb8dddeccc6","format":"Streaming","title":"Star Wars: Episode IV - A New Hope"}]%
 ```
 
-### Get one Todo
+### Get one Movie
 
 ```bash
-# Replace the <id> part with a real id from your todos table
-curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id>
+# Need to encode the url
+curl "$( echo 'http://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )"
 ```
 
 Example Result:
 ```bash
-{"text":"Learn Serverless","id":"ee6490d0-aa81-11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":false,"updatedAt":1479138570824}%
+{"createdAt":1533839341492,"format":"Streaming","length":"121 min","rating":"5","id":"166d7560-9c02-11e8-8425-67e3a8988850","title":"Star Wars: Episode IV - A New Hope","releaseYear":"1977","updatedAt":1533839341492}%
 ```
 
 ### Update a Todo
@@ -119,14 +119,17 @@ Example Result:
 {"text":"Learn Serverless","id":"ee6490d0-aa81-11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":true,"updatedAt":1479138570824}%
 ```
 
-### Delete a Todo
+### Delete a Movie
 
 ```bash
 # Replace the <id> part with a real id from your todos table
-curl -X DELETE https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id>
+curl -X DELETE "$( echo 'http://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )"
 ```
 
-No output
+Example Result:
+```bash
+{}%
+```
 
 ## Scaling
 

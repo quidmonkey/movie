@@ -1,15 +1,14 @@
 'use strict';
 
-const uuid = require('uuid');
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 const Joi = require('joi');
+const uuid = require('uuid');
+const ddb = require('serverless-dynamodb-client');
+const dynamoDb = ddb.doc;
 
-const schema = require('./schema');
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const { schema } = require('./config');
 
 module.exports.create = (event, context, callback) => {
-  const timestamp = new Date().getTime();
+  const timestamp = Date.now();
   const data = JSON.parse(event.body);
   const certificate = Joi.validate(data, schema);
 

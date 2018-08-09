@@ -6,13 +6,16 @@
   "license": "MIT",
   "dependencies": {
     "joi": "^13.5.2",
+    "node-fetch": "^2.2.0",
     "serverless": "^1.30.0",
+    "serverless-dynamodb-client": "0.0.2",
     "serverless-dynamodb-local": "^0.2.30",
     "serverless-offline": "^3.25.7",
     "uuid": "^2.0.3"
   },
   "scripts": {
     "build": "AWS_SDK_LOAD_CONFIG=1 serverless deploy -v",
+    "debug": "AWS_SDK_LOAD_CONFIG=1 SLS_DEBUG=1 serverless offline start",
     "dev": "AWS_SDK_LOAD_CONFIG=1 serverless offline start",
     "postinstall": "serverless install dynamodb",
     "test": "jest"
