@@ -50,20 +50,23 @@ Service Information
 service: movies
 stage: dev
 region: us-east-1
+stack: movies-dev
 api keys:
   None
 endpoints:
-  POST - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/movies
-  GET - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/movies
-  GET - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
-  PUT - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
-  DELETE - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
+  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
+  PUT - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
+  DELETE - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/schema
 functions:
-  movies-dev-update: arn:aws:lambda:us-east-1:488110005556:function:movies-dev-update
-  movies-dev-get: arn:aws:lambda:us-east-1:488110005556:function:movies-dev-get
-  movies-dev-list: arn:aws:lambda:us-east-1:488110005556:function:movies-dev-list
-  movies-dev-create: arn:aws:lambda:us-east-1:488110005556:function:movies-dev-create
-  movies-dev-delete: arn:aws:lambda:us-east-1:488110005556:function:movies-dev-delete
+  create: movies-dev-create
+  list: movies-dev-list
+  get: movies-dev-get
+  update: movies-dev-update
+  delete: movies-dev-delete
+  schema: movies-dev-schema
 ```
 
 ## Usage
