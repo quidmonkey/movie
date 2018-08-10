@@ -5,6 +5,7 @@
   "author": "Abraham Walters",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "joi": "^13.5.2",
     "jsonwebtoken": "^8.3.0",
     "node-fetch": "^2.2.0",

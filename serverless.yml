@@ -13,7 +13,7 @@ provider:
   name: aws
   runtime: nodejs8.10
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_MOVIES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
     JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
   iamRoleStatements:
     - Effect: Allow
@@ -24,7 +24,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_MOVIES_TABLE}"
 
 functions:
   create:
@@ -83,13 +83,21 @@ functions:
           method: post
           cors: true
 
+  user:
+    handler: movies/user.user
+    events:
+      - http:
+          path: movies/user
+          method: post
+          cors: true
+
 resources:
   Resources:
     MoviesDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:provider.environment.DYNAMODB_MOVIES_TABLE}
         AttributeDefinitions:
           - AttributeName: title
             AttributeType: S

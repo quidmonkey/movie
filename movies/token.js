@@ -22,7 +22,7 @@ module.exports.token = (event, context, callback) => {
   const token = jwt.sign(
     { user },
     process.env.JWT_SECRET,
-    { expiresIn: config.jwt.expiresIn }
+    { expiresIn: config.auth.jwt.expiresIn }
   );
 
   const response = {

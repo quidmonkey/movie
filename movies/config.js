@@ -14,8 +14,11 @@ const user = {
 };
 
 module.exports = {
-  jwt: {
-    expiresIn: 86400  // one day in secs
+  auth: {
+    saltRounds: 10,
+    jwt: {
+      expiresIn: 86400  // one day in secs
+    },
   },
   schemas: {
     movie,

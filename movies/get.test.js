@@ -2,7 +2,7 @@ const ddb = require('serverless-dynamodb-client');
 
 const { get } = require('./get');
 
-process.env.DYNAMODB_TABLE = 'foo';
+process.env.DYNAMODB_MOVIES_TABLE = 'foo';
 
 const dynamoDb = ddb.doc;
 const mockMovieTitle = 'foo';

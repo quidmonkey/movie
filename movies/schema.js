@@ -5,7 +5,7 @@ const dynamoDb = ddb.raw;
 
 module.exports.schema = (event, context, callback) => {
   const params = {
-    TableName: process.env.DYNAMODB_TABLE,
+    TableName: process.env.DYNAMODB_MOVIES_TABLE,
   };
 
   dynamoDb.describeTable(params, (error, result) => {

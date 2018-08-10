@@ -1,53 +1,47 @@
-'use strict';
-
 const Joi = require('joi');
+const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
 const config = require('./config');
+const schema = Joi.object().keys(config.schemas.user);
 
-const schema = Joi.object().keys(config.schemas.movie);
-
-module.exports.create = (event, context, callback) => {
+module.exports.user = (event, context, callback) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
-  const certificate = Joi.validate(data, schema);
+  const certificate = Joi.validate(schema, data);
 
   if (certificate.error) {
     console.error('~~~ Validation Failed', certificate.error);
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t create the movie.',
+      body: 'Incorrect User Data - POST Body requires a username & password.',
     });
-    return;
   }
 
+  const hash = bcrypt.hashSync(data.password, config.auth.saltRounds);
   const params = {
-    TableName: process.env.DYNAMODB_MOVIES_TABLE,
+    TableName: process.env.DYNAMODB_USER_TABLE,
     Item: {
       id: uuid.v1(),
       createdAt: timestamp,
       updatedAt: timestamp,
 
-      title: data.title,
-      format: data.format,
-      length: data.length,
-      releaseYear: data.releaseYear,
-      rating: data.rating
+      username: data.username,
+      password: hash
     },
   };
 
-  // write the todo to the database
   dynamoDb.put(params, (error) => {
     // handle potential errors
     if (error) {
-      console.error('~~~', error);
+      console.error('~~~ DynamoDB User PUT error', error);
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t create the movie.',
+        body: 'Couldn\'t create user.',
       });
       return;
     }

@@ -3,7 +3,7 @@ const dynamoDb = ddb.raw;
 
 const { schema } = require('./schema');
 
-process.env.DYNAMODB_TABLE = 'foo';
+process.env.DYNAMODB_MOVIES_TABLE = 'foo';
 
 it('schema: should request a DynamoDb table schema', () => {
   const mockRes = 'foo';

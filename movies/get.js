@@ -5,7 +5,7 @@ const dynamoDb = ddb.doc;
 
 module.exports.get = (event, context, callback) => {
   const params = {
-    TableName: process.env.DYNAMODB_TABLE,
+    TableName: process.env.DYNAMODB_MOVIES_TABLE,
     Key: {
       title: decodeURIComponent(event.pathParameters.title)
     },
