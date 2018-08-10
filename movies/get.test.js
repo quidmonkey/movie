@@ -26,7 +26,7 @@ it('get: should get a DynamoDb entry', () => {
     expect(res).toEqual(expectedRes);
   });
 
-  jest.fn(dynamoDb.get).mockImplementation((params, callback) => {
+  dynamoDb.get = jest.fn(dynamoDb.get).mockImplementation((params, callback) => {
     const expectedParams = {
       TableName: 'foo',
       Key: {
@@ -36,7 +36,9 @@ it('get: should get a DynamoDb entry', () => {
 
     expect(params).toEqual(expectedParams);
 
-    callback(null, mockRes);
+    callback(null, {
+      Item: mockRes
+    });
   });
 
   get(mockEvent, {}, mockCallback);
@@ -47,6 +49,7 @@ it('get: should handle a DynamoDb get entry error', () => {
   const mockCallback = jest.fn().mockImplementation((err, res) => {
     const expectedRes = {
       statusCode: 501,
+      headers: { 'Content-Type': 'text/plain' },
       body: 'Couldn\'t fetch the movie.'
     };
 
@@ -54,7 +57,7 @@ it('get: should handle a DynamoDb get entry error', () => {
     expect(res).toEqual(expectedRes);
   });
 
-  jest.fn(dynamoDb.get).mockImplementation((params, callback) => {
+  dynamoDb.get = jest.fn(dynamoDb.get).mockImplementation((params, callback) => {
     callback(mockErr, null);
   });
 
