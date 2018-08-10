@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const schema = {
+const movie = {
   title: Joi.string().min(1).max(50).required(),
   format: Joi.string().valid('VHS', 'DVD', 'Streaming').required(),
   length: Joi.string().regex(/[0-9]{1,3} min/).required(),
@@ -8,6 +8,17 @@ const schema = {
   rating: Joi.number().min(1).max(5).required()
 };
 
+const user = {
+  username: Joi.string().alphanum().required(),
+  password: Joi.string().min(8).required()
+};
+
 module.exports = {
-  schema
+  jwt: {
+    expiresIn: 86400  // one day in secs
+  },
+  schemas: {
+    movie,
+    user
+  }
 };

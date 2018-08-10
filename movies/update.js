@@ -6,7 +6,7 @@ const dynamoDb = ddb.doc;
 
 const config = require('./config');
 
-const { format, length, releaseYear, rating } = config.schema;
+const { format, length, releaseYear, rating } = config.schemas.movie;
 const schema = Joi.object().keys({ format, length, releaseYear, rating });
 
 module.exports.update = (event, context, callback) => {

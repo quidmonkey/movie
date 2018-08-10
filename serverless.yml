@@ -2,11 +2,19 @@ service: movies
 
 frameworkVersion: ">=1.1.0 <2.0.0"
 
+custom:
+  secrets: ${file(secrets.json)}
+  dynamodb:
+    start:
+      inMemory: true
+      migrate: true
+
 provider:
   name: aws
   runtime: nodejs8.10
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -17,12 +25,6 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
-
-custom:
-  dynamodb:
-    start:
-      inMemory: true
-      migrate: true
 
 functions:
   create:
@@ -71,6 +73,14 @@ functions:
       - http:
           path: movies/schema
           method: get
+          cors: true
+
+  token:
+    handler: movies/token.token
+    events:
+      - http:
+          path: movies/token
+          method: post
           cors: true
 
 resources:

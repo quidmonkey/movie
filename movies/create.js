@@ -7,7 +7,7 @@ const dynamoDb = ddb.doc;
 
 const config = require('./config');
 
-const schema = Joi.object().keys(config.schema);
+const schema = Joi.object().keys(config.schemas.movie);
 
 module.exports.create = (event, context, callback) => {
   const timestamp = Date.now();
