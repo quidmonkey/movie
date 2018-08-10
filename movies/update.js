@@ -6,11 +6,12 @@ const dynamoDb = ddb.doc;
 
 const config = require('./config');
 
+const { format, length, releaseYear, rating } = config.schema;
+const schema = Joi.object().keys({ format, length, releaseYear, rating });
+
 module.exports.update = (event, context, callback) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
-  const { format, length, releaseYear, rating } = config.schema;
-  const schema = Joi.object().keys({ format, length, releaseYear, rating });
   const certificate = Joi.validate(data, schema);
 
   // validation
