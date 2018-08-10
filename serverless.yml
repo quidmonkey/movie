@@ -3,11 +3,13 @@ service: movies
 frameworkVersion: ">=1.1.0 <2.0.0"
 
 custom:
-  secrets: ${file(secrets.json)}
   dynamodb:
     start:
       inMemory: true
       migrate: true
+  secrets: ${file(auth/secrets.json)}
+  serverless-offline:
+    httpsProtocol: 'auth'
 
 provider:
   name: aws

@@ -86,7 +86,7 @@ You can create a user and get a token locally with the following commands:
 ### Create a User
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://localhost:3000/movies/user --data '{ "username": "Joe", "password": "i<3bunnies" }'
+curl -X POST -H "Content-Type:application/json" https://localhost:3000/movies/user --data '{ "username": "Joe", "password": "i<3bunnies" }' --cacert auth/cert.pem
 ```
 
 Example Result:
@@ -97,7 +97,7 @@ User created successfully.%
 ### Get a Token
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://localhost:3000/movies/token --data '{ "username": "Joe", "password": "i<3bunnies" }'
+curl -X POST -H "Content-Type:application/json" https://localhost:3000/movies/token --data '{ "username": "Joe", "password": "i<3bunnies" }' --cacert auth/cert.pem
 ```
 
 Example Result:
@@ -109,7 +109,7 @@ You can create, retrieve, update, or delete movies locally with the following co
 ### Create a Movie
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://localhost:3000/movies --data '{ "title": "Star Wars: Episode IV - A New Hope", "format": "Streaming", "length": "121 min", "releaseYear": "1977", "rating": "5" }'
+curl -X POST -H "Content-Type:application/json" https://localhost:3000/movies --data '{ "title": "Star Wars: Episode IV - A New Hope", "format": "Streaming", "length": "121 min", "releaseYear": "1977", "rating": "5" }' --cacert auth/cert.pem
 ```
 
 Example Result:
@@ -120,7 +120,7 @@ Example Result:
 ### List all Movies
 
 ```bash
-curl http://localhost:3000/movies
+curl https://localhost:3000/movies --cacert auth/cert.pem
 ```
 
 Example output:
@@ -128,11 +128,11 @@ Example output:
 [{"length":"121 min","rating":"5","updatedAt":1533829289891,"releaseYear":"1977","createdAt":1533829289891,"id":"af34dd50-9bea-11e8-a01a-c334472b9029","format":"Streaming","title":"Star Wars: Episode IV - A New Hope"},{"length":"121 min","rating":"5","updatedAt":1533829964000,"releaseYear":"1977","createdAt":1533829964000,"id":"4101e330-9bec-11e8-915e-1bb8dddeccc6","format":"Streaming","title":"Star Wars: Episode IV - A New Hope"}]%
 ```
 
-### Get one Movie
+### Get a Movie
 
 ```bash
 # Need to encode the url
-curl "$( echo 'http://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )"
+curl "$( echo 'https://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )" --cacert auth/cert.pem
 ```
 
 Example Result:
@@ -143,7 +143,7 @@ Example Result:
 ### Update a Movie
 
 ```bash
-curl -X PUT "$( echo 'http://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )" --data '{ "format": "DVD", "length": "125 min", "releaseYear": "2001", "rating": "4" }'
+curl -X PUT "$( echo 'https://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )" --data '{ "format": "DVD", "length": "125 min", "releaseYear": "2001", "rating": "4" }' --cacert auth/cert.pem
 ```
 
 
@@ -156,7 +156,7 @@ Example Result:
 
 ```bash
 # Replace the <id> part with a real id from your todos table
-curl -X DELETE "$( echo 'http://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )"
+curl -X DELETE "$( echo 'https://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )" --cacert auth/cert.pem
 ```
 
 Example Result:
