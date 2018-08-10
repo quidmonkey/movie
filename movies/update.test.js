@@ -31,7 +31,7 @@ it('update: should update a DynamoDb entry', () => {
   const mockCallback = jest.fn().mockImplementation((err, res) => {
     const expectedRes = {
       statusCode: 200,
-      body: JSON.stringify("foo")
+      body: JSON.stringify('foo')
     };
     
     expect(err).toBeNull();
