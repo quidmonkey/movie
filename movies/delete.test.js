@@ -26,7 +26,7 @@ it('delete: should delete a DynamoDb entry', () => {
     expect(res).toEqual(expectedRes);
   });
 
-  jest.fn(dynamoDb.delete).mockImplementation((params, callback) => {
+  dynamoDb.delete = jest.fn(dynamoDb.delete).mockImplementation((params, callback) => {
     const expectedParams = {
       TableName: 'foo',
       Key: {
@@ -47,6 +47,7 @@ it('delete: should handle DynamoDb delete entry failures', () => {
   const mockCallback = jest.fn().mockImplementation((err, res) => {
     const expectedRes = {
       statusCode: 501,
+      headers: { 'Content-Type': 'text/plain' },
       body: 'Couldn\'t remove the movie.'
     };
 
@@ -54,7 +55,7 @@ it('delete: should handle DynamoDb delete entry failures', () => {
     expect(res).toEqual(expectedRes);
   });
 
-  jest.fn(dynamoDb.delete).mockImplementation((params, callback) => {
+  dynamoDb.delete = jest.fn(dynamoDb.delete).mockImplementation((params, callback) => {
     callback(mockErr, null);
   });
 
