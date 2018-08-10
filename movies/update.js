@@ -54,7 +54,7 @@ module.exports.update = (event, context, callback) => {
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the movie.',
+        body: 'Couldn\'t update the movie.',
       });
       return;
     }
