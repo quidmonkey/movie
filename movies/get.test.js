@@ -1,7 +1,5 @@
 const ddb = require('serverless-dynamodb-client');
 
-jest.mock('serverless-dynamodb-client');
-
 const { get } = require('./get');
 
 process.env.DYNAMODB_TABLE = 'foo';

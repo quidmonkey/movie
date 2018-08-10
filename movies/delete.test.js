@@ -1,7 +1,5 @@
 const ddb = require('serverless-dynamodb-client');
 
-jest.mock('serverless-dynamodb-client');
-
 const del = require('./delete').delete;
 
 process.env.DYNAMODB_TABLE = 'foo';
