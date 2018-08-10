@@ -3,11 +3,11 @@
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
-const params = {
-  TableName: process.env.DYNAMODB_TABLE,
-};
-
 module.exports.list = (event, context, callback) => {
+  const params = {
+    TableName: process.env.DYNAMODB_TABLE,
+  };
+  
   // fetch all todos from the database
   dynamoDb.scan(params, (error, result) => {
     // handle potential errors
