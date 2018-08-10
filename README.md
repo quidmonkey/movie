@@ -81,6 +81,29 @@ Once serverless-offline is up & running, you can populate DynamoDB with the foll
 node load-movies.js
 ```
 
+You can create a user and get a token locally with the following commands:
+
+### Create a User
+
+```bash
+curl -X POST -H "Content-Type:application/json" http://localhost:3000/movies/user --data '{ "username": "Joe", "password": "i<3bunnies" }'
+```
+
+Example Result:
+```bash
+User created successfully.%
+```
+
+### Get a Token
+
+```bash
+curl -X POST -H "Content-Type:application/json" http://localhost:3000/movies/token --data '{ "username": "Joe", "password": "i<3bunnies" }'
+```
+
+Example Result:
+```bash{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNyZWF0ZWRBdCI6MTUzMzkyNTMyMjEwMSwicGFzc3dvcmQiOiIkMmIkMTAkS1lFYk40aWRiUEtUN2FrMzhSRy4uZUQuTnRSRGEua1VObXQxMEJaOXhOQWNVNS8zandMNVciLCJpZCI6IjQ2ZTgwZGUwLTljY2EtMTFlOC04Y2JiLWIzYTQ5MDkyMzUwOSIsInVwZGF0ZWRBdCI6MTUzMzkyNTMyMjEwMSwidXNlcm5hbWUiOiJKb2UifSwiaWF0IjoxNTMzOTI1NTEzLCJleHAiOjE1MzQwMTE5MTN9.OTQTWgnKQd2KgS5f00izOkkYlJtbB3t4DsMbgxb7s00"}%
+```
+
 You can create, retrieve, update, or delete movies locally with the following commands:
 
 ### Create a Movie

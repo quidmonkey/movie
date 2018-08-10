@@ -10,7 +10,7 @@ const schema = Joi.object().keys(config.schemas.user);
 module.exports.user = (event, context, callback) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
-  const certificate = Joi.validate(schema, data);
+  const certificate = Joi.validate(data, schema);
 
   if (certificate.error) {
     console.error('~~~ Validation Failed', certificate.error);
@@ -46,10 +46,9 @@ module.exports.user = (event, context, callback) => {
       return;
     }
 
-    // create a response
     const response = {
       statusCode: 200,
-      body: JSON.stringify(params.Item),
+      body: 'User created successfully.'
     };
     callback(null, response);
   });

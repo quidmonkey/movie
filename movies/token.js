@@ -9,7 +9,7 @@ const schema = Joi.object().keys(config.schemas.user);
 
 module.exports.token = (event, context, callback) => {
   const data = JSON.parse(event.body);
-  const certificate = Joi.validate(schema, data);
+  const certificate = Joi.validate(data, schema);
 
   if (certificate.error) {
     console.error('~~~ Validation Failed', certificate.error);
@@ -23,15 +23,13 @@ module.exports.token = (event, context, callback) => {
   const params = {
     TableName: process.env.DYNAMODB_USER_TABLE,
     Key: {
-      username: decodeURIComponent(event.pathParameters.username)
+      username: decodeURIComponent(data.username)
     },
   };
 
-  // fetch todo from the database
   dynamoDb.get(params, (error, result) => {
-    // handle potential errors
     if (error) {
-      console.error('~~~', error);
+      console.error('~~~ DynamoDB GET User error', error);
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
@@ -40,7 +38,6 @@ module.exports.token = (event, context, callback) => {
       return;
     }
 
-    console.log('~~~ result', result);
     const user = result.Item;
     let response;
 
@@ -53,7 +50,7 @@ module.exports.token = (event, context, callback) => {
 
       response = {
         statusCode: 200,
-        body: JSON.stringify(token)
+        body: JSON.stringify({ token })
       };
     } else {
       response = {
