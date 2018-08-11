@@ -111,7 +111,6 @@ functions:
           path: movies/user
           method: post
           cors: true
-          authorizer: authorize
 
 resources:
   Resources:
