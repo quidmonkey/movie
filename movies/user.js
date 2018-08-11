@@ -49,7 +49,7 @@ module.exports.user = (event, context, callback) => {
 
     const response = {
       statusCode: 200,
-      body: 'User created successfully.'
+      body: JSON.stringify('User created successfully.')
     };
     callback(null, response);
   });
