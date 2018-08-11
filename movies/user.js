@@ -30,7 +30,8 @@ module.exports.user = (event, context, callback) => {
       updatedAt: timestamp,
 
       username: data.username,
-      password: hash
+      password: hash,
+      scopes: data.scopes || ['*']  // default to access all
     },
   };
 

@@ -16,7 +16,7 @@ module.exports.token = (event, context, callback) => {
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Incorrect User Data - POST Body requires a username & password.',
+      body: 'Incorrect User Data - POST Body requires a username & password.'
     });
   }
 

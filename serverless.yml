@@ -39,6 +39,9 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_USER_TABLE}"
 
 functions:
+  authorize:
+    handler: movies/authorize.authorize
+
   create:
     handler: movies/create.create
     events:
@@ -46,30 +49,7 @@ functions:
           path: movies
           method: post
           cors: true
-
-  list:
-    handler: movies/list.list
-    events:
-      - http:
-          path: movies
-          method: get
-          cors: true
-
-  get:
-    handler: movies/get.get
-    events:
-      - http:
-          path: movies/{title}
-          method: get
-          cors: true
-
-  update:
-    handler: movies/update.update
-    events:
-      - http:
-          path: movies/{title}
-          method: put
-          cors: true
+          authorizer: authorize
 
   delete:
     handler: movies/delete.delete
@@ -78,6 +58,25 @@ functions:
           path: movies/{title}
           method: delete
           cors: true
+          authorizer: authorize
+
+  get:
+    handler: movies/get.get
+    events:
+      - http:
+          path: movies/{title}
+          method: get
+          cors: true
+          authorizer: authorize
+
+  list:
+    handler: movies/list.list
+    events:
+      - http:
+          path: movies
+          method: get
+          cors: true
+          authorizer: authorize
 
   schema:
     handler: movies/schema.schema
@@ -86,6 +85,7 @@ functions:
           path: movies/schema
           method: get
           cors: true
+          authorizer: authorize
 
   token:
     handler: movies/token.token
@@ -95,6 +95,15 @@ functions:
           method: post
           cors: true
 
+  update:
+    handler: movies/update.update
+    events:
+      - http:
+          path: movies/{title}
+          method: put
+          cors: true
+          authorizer: authorize
+
   user:
     handler: movies/user.user
     events:
@@ -102,6 +111,7 @@ functions:
           path: movies/user
           method: post
           cors: true
+          authorizer: authorize
 
 resources:
   Resources:
