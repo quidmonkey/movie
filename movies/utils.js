@@ -92,6 +92,7 @@ const merge = (...objs) => {
     return Object.assign({}, merged, obj);
   });
 };
+module.exports.merge = merge;
 
 /**
  * Wraps a request with proper no caching,
