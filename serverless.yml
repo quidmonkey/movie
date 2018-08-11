@@ -15,8 +15,8 @@ provider:
   name: aws
   runtime: nodejs8.10
   environment:
-    DYNAMODB_MOVIES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-    DYNAMODB_USER_TABLE: ${self:service}-user-${opt:stage, self:provider.stage}
+    DYNAMODB_MOVIES_TABLE: node-${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_USER_TABLE: node-${self:service}-user-${opt:stage, self:provider.stage}
     JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
   iamRoleStatements:
     - Effect: Allow
