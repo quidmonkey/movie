@@ -22,7 +22,7 @@
     "dev": "AWS_SDK_LOAD_CONFIG=1 serverless offline start",
     "lint": "eslint --fix --quiet --ignore-path .eslintignore movies/*.js",
     "prepush": "npm run validate",
-    "postinstall": "serverless install dynamodb",
+    "postinstall": "serverless dynamodb install",
     "test": "jest --verbose --watch",
     "validate": "cross-env CI=true npm-run-all --parallel coverage lint"
   },
