@@ -126,3 +126,16 @@ class RequestError extends Error {
   }
 }
 module.exports.RequestError = RequestError;
+
+const sortMovies = (movies, attr) => {
+  return [...movies].sort((a, b) => {
+    if(a[attr] < b[attr]) {
+      return -1;
+    } else if (a[attr] > b[attr]) {
+      return 1;
+    }
+    
+    return 0;
+  });
+};
+module.exports.sortMovies = sortMovies;

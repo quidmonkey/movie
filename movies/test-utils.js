@@ -26,6 +26,15 @@ const createMovie = async (movieModel) => {
 };
 module.exports.createMovie = createMovie;
 
+const getMovieAttr = () => {
+  const movie = getMovieModel();
+  const attrs = Object.keys(movie);
+  const i = Math.floor(Math.random() * attrs.length);
+
+  return attrs[i];
+};
+module.exports.getMovieAttr = getMovieAttr;
+
 const getMovieModel = () => {
   const i = Math.floor(Math.random() * movies.length);
   return {...movies[i]};  // clone

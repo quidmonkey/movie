@@ -3,6 +3,8 @@ const https = require('https');
 
 jest.setMock('node-fetch', fetch);
 
+const { getMovieAttr, movies } = require('./test-utils');
+
 const {
   getIAMPolicy,
   getNoCacheUrl,
@@ -11,7 +13,8 @@ const {
   isAuthorized,
   merge,
   req,
-  RequestError
+  RequestError,
+  sortMovies
 } = require('./utils');
 
 it('getIAMPolicy - should define an AWS IAM policy for Resource Access', () => {
@@ -182,4 +185,22 @@ it('RequestError - should be an instance of Error that contains a statusCode pro
   expect(err).toBeInstanceOf(RequestError);
   expect(err.statusCode).toBe(200);
   expect(err.message).toBe('foobar');
+});
+
+it('sortMovies - should sort a list of movie models by a given attribute', () => {
+  const attr = getMovieAttr();
+  
+  const expected = movies.sort((a, b) => {
+    if (a[attr] < b[attr]) {
+      return -1;
+    } else if (a[attr] > b[attr]) {
+      return 1;
+    }
+
+    return 0;
+  });
+  const actual = sortMovies(movies, attr);
+
+  expect(actual).not.toBe(expected);
+  expect(JSON.stringify(actual)).toBe(JSON.stringify(expected));
 });
