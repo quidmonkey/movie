@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { req } = require('./movies/utils');
+const { req } = require('./utils');
 
 const origin = 'https://localhost:3000';
 module.exports.origin = origin;
