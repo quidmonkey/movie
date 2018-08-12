@@ -110,7 +110,7 @@ const req = async (url, opts) => {
 
   if (status < 600 && status >= 400) {
     const message = await res.text();
-    throw new Error(message);
+    throw new RequestError(status, message);
   }
 
   const json = await res.json();
@@ -118,3 +118,11 @@ const req = async (url, opts) => {
   return humps.camelizeKeys(json);
 };
 module.exports.req = req;
+
+class RequestError extends Error {
+  constructor(statusCode, ...args) {
+    super(...args);
+    this.statusCode = statusCode;
+  }
+}
+module.exports.RequestError = RequestError;

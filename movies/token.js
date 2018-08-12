@@ -16,7 +16,7 @@ module.exports.token = (event, context, callback) => {
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Incorrect User Data - POST Body requires a username & password.'
+      body: 'Incorrect User Data - POST Body requires a username & an alphanumeric password of at least 8 characters.'
     });
   }
 
@@ -54,7 +54,7 @@ module.exports.token = (event, context, callback) => {
       };
     } else {
       response = {
-        statusCode: 400,
+        statusCode: 403,
         headers: { 'Content-Type': 'text/plain' },
         body: 'Unable to serve token - incorrect username or password.',
       };

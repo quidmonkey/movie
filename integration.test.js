@@ -1,4 +1,4 @@
-const { merge, req } = require('./movies/utils');
+const { merge, req, RequestError } = require('./movies/utils');
 const {
   movies,
   createMovie,
@@ -17,7 +17,7 @@ it('/user - should create a user', async () => {
   expect(actual).toBe(expected);
 });
 
-it.only('/user - should fail on bad user data', async () => {
+it('/user - should fail on bad user data', async () => {
   const user = {
     username: 'foo'
   };
@@ -29,7 +29,9 @@ it.only('/user - should fail on bad user data', async () => {
   try {
     await req(url, opts);
   } catch(err) {
-    expect(err.message).toBe('Incorrect User Data - POST Body requires a username & password.');
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(400);
+    expect(err.message).toBe('Incorrect User Data - POST Body requires a username & an alphanumeric password of at least 8 characters.');
   }
 });
 
@@ -55,7 +57,9 @@ it('/token - should fail on bad user data', async () => {
   try {
     await req(url, opts);
   } catch(err) {
-    expect(err.message).toBe('Incorrect User Data - POST Body requires a username & password.');
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(400);
+    expect(err.message).toBe('Incorrect User Data - POST Body requires a username & an alphanumeric password of at least 8 characters.');
   }
 });
 
@@ -73,6 +77,8 @@ it('/token - should fail on mismatched password', async () => {
   try {
     await req(url, opts);
   } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(403);
     expect(err.message).toBe('Unable to serve token - incorrect username or password.');
   }
 });
