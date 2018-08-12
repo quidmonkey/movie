@@ -33,7 +33,7 @@ module.exports.token = (event, context, callback) => {
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch user.',
+        body: 'Unable to serve token - unable to fetch user.',
       });
       return;
     }

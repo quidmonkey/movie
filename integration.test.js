@@ -35,6 +35,18 @@ it('/user - should fail on bad user data', async () => {
   }
 });
 
+it('/user - should fail on an incorrect DynamoDb call', async () => {
+  process.env.DYNAMODB_USER_TABLE = 'foobar';
+  
+  try {
+    await getUser();
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(501);
+    expect(err.message).toBe('Couldn\'t create user.');
+  }
+});
+
 it('/token - should fetch a token', async () => {
   const res = await getToken();
 
@@ -83,6 +95,18 @@ it('/token - should fail on mismatched password', async () => {
   }
 });
 
+it('/token - should fail on an incorrect DynamoDb call', async () => {
+  process.env.DYNAMODB_USER_TABLE = 'foobar';
+
+  try {
+    await getToken();
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(501);
+    expect(err.message).toBe('Unable to serve token - unable to fetch user.');
+  }
+});
+
 it('/create - should create a movie', async () => {
   const movieModel = getMovieModel();
   const { movie } = await createMovie(movieModel);
@@ -101,9 +125,22 @@ it('/create - should fail on a bad movie model', async () => {
   } catch(err) {
     expect(err).toBeInstanceOf(RequestError);
     expect(err.statusCode).toBe(400);
-    expect(err.message).toBe('Validation Failed: Incorrect Movie Data Model.')
+    expect(err.message).toBe('Validation Failed: Incorrect Movie Data Model.');
   }
+});
 
+it('/create - should fail on an incorrect DynamoDb call', async () => {
+  process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
+  
+  const movieModel = getMovieModel();
+  
+  try {
+    await createMovie(movieModel);
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(501);
+    expect(err.message).toBe('Couldn\'t create the movie.');
+  }
 });
 
 it('/delete - should delete a movie', async () => {
@@ -167,6 +204,28 @@ it('/get - should get a movie', async () => {
 it('/get - should fail on a non-existant movie', async () => {
   const token = await getToken();
   const title = '';
+  const url = getURL(`/movies/${title}`);
+  const opts = {
+    headers: {
+      Authorization: token
+    }
+  };
+
+  try {
+    await req(url, opts);
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(501);
+    expect(err.message).toBe('Couldn\'t fetch the movie.');
+  }
+});
+
+it('/get - should fail on an incorrect DynamoDb call', async () => {
+  process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
+  
+  const movieModel = getMovieModel();
+  const { token } = await createMovie(movieModel);
+  const { title } = movieModel;
   const url = getURL(`/movies/${title}`);
   const opts = {
     headers: {
