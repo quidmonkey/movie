@@ -210,6 +210,27 @@ it('/list - should get all movies', async () => {
   }
 });
 
+it('/list - should fail on an incorrect DynamoDb call', async () => {
+  process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
+  
+  const movieModel = getMovieModel();
+  const { token } = await createMovie(movieModel);
+  const url = getURL('/movies');
+  const opts = {
+    headers: {
+      Authorization: token
+    }
+  };
+
+  try {
+    await req(url, opts);
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(501);
+    expect(err.message).toBe('Couldn\'t fetch any movies.');
+  }
+});
+
 it('/schema - should get the movies table schema', async () => {
   const token = await getToken();
   const url = getURL('/movies/schema');
