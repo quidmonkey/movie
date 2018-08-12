@@ -11,8 +11,7 @@ module.exports.movies = movies;
 
 const createMovie = async (movieModel) => {
   const token = await getToken();
-
-  const url = `${origin}/movies`;
+  const url = getURL('/movies');
   const opts = {
     method: 'POST',
     body: JSON.stringify(movieModel),
@@ -35,7 +34,7 @@ module.exports.getMovieModel = getMovieModel;
 
 const getToken = async () => {
   const { user } = await getUser();
-  const url = `${origin}/movies/token`;
+  const url = getURL('/movies/token');
   const opts = {
     method: 'POST',
     body: JSON.stringify(user)
@@ -56,7 +55,7 @@ const getUser = async () => {
     username: Date.now().toString(),
     password: Date.now().toString()
   };
-  const url = `${origin}/movies/user`;
+  const url = getURL('/movies/user');
   const opts = {
     method: 'POST',
     body: JSON.stringify(user)

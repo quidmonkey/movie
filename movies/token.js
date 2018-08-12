@@ -56,7 +56,7 @@ module.exports.token = (event, context, callback) => {
       response = {
         statusCode: 400,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Unable to serve token - incorrect user password.',
+        body: 'Unable to serve token - incorrect username or password.',
       };
     }
 

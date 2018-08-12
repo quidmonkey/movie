@@ -106,11 +106,11 @@ const req = async (url, opts) => {
   const noCacheUrl = getNoCacheUrl(url);
   const httpsOpts = url.includes('https') ? getHTTPSOpts(opts) : opts;
   const res = await fetch(noCacheUrl, httpsOpts);
+  const { status } = res;
 
-  if (res.status < 600 && res.status >= 400) {
-    const err = await res.json();
-    console.error('~~~ Request Error', JSON.stringify(err, null, 2));
-    throw new Error(err);
+  if (status < 600 && status >= 400) {
+    const message = await res.text();
+    throw new Error(message);
   }
 
   const json = await res.json();

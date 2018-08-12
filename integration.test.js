@@ -17,6 +17,22 @@ it('/user - should create a user', async () => {
   expect(actual).toBe(expected);
 });
 
+it.only('/user - should fail on bad user data', async () => {
+  const user = {
+    username: 'foo'
+  };
+  const url = getURL('/movies/user');
+  const opts = {
+    method: 'POST',
+    body: JSON.stringify(user)
+  };
+  try {
+    await req(url, opts);
+  } catch(err) {
+    expect(err.message).toBe('Incorrect User Data - POST Body requires a username & password.');
+  }
+});
+
 it('/token - should fetch a token', async () => {
   const res = await getToken();
 
@@ -24,6 +40,41 @@ it('/token - should fetch a token', async () => {
   const actual = typeof res;
 
   expect(actual).toBe(expected);
+});
+
+it('/token - should fail on bad user data', async () => {
+  await getUser();
+  const user = {
+    username: 'foo'
+  };
+  const url = getURL('/movies/token');
+  const opts = {
+    method: 'POST',
+    body: JSON.stringify(user)
+  };
+  try {
+    await req(url, opts);
+  } catch(err) {
+    expect(err.message).toBe('Incorrect User Data - POST Body requires a username & password.');
+  }
+});
+
+it('/token - should fail on mismatched password', async () => {
+  const { user } = await getUser();
+  const newUser = {
+    username: user.username,
+    password: 'foobarbaz'
+  };
+  const url = getURL('/movies/token');
+  const opts = {
+    method: 'POST',
+    body: JSON.stringify(newUser)
+  };
+  try {
+    await req(url, opts);
+  } catch(err) {
+    expect(err.message).toBe('Unable to serve token - incorrect username or password.');
+  }
 });
 
 it('/create - should create a movie', async () => {
