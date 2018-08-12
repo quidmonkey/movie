@@ -3,7 +3,7 @@ const https = require('https');
 
 jest.setMock('node-fetch', fetch);
 
-const { getMovieAttr, movies } = require('./test-utils');
+const { getMovieModel, movies } = require('./test-utils');
 
 const {
   getIAMPolicy,
@@ -188,19 +188,21 @@ it('RequestError - should be an instance of Error that contains a statusCode pro
 });
 
 it('sortMovies - should sort a list of movie models by a given attribute', () => {
-  const attr = getMovieAttr();
+  const movie = getMovieModel();
   
-  const expected = movies.sort((a, b) => {
-    if (a[attr] < b[attr]) {
-      return -1;
-    } else if (a[attr] > b[attr]) {
-      return 1;
-    }
+  for (const attr of Object.keys(movie)) {
+    const expected = [...movies].sort((a, b) => {
+      if (a[attr] < b[attr]) {
+        return -1;
+      } else if (a[attr] > b[attr]) {
+        return 1;
+      }
 
-    return 0;
-  });
-  const actual = sortMovies(movies, attr);
+      return 0;
+    });
+    const actual = sortMovies(movies, attr);
 
-  expect(actual).not.toBe(expected);
-  expect(JSON.stringify(actual)).toBe(JSON.stringify(expected));
+    expect(actual).not.toBe(movies);
+    expect(JSON.stringify(actual)).toBe(JSON.stringify(expected));
+  }
 });
