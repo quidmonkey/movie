@@ -18,15 +18,17 @@
   },
   "scripts": {
     "build": "AWS_SDK_LOAD_CONFIG=1 serverless deploy -v",
-    "coverage": "jest --coverage --silent movies/",
+    "coverage": "jest --coverage --silent",
     "debug": "AWS_SDK_LOAD_CONFIG=1 SLS_DEBUG=1 serverless offline start",
     "dev": "AWS_SDK_LOAD_CONFIG=1 serverless offline start",
     "lint": "eslint --fix --quiet --ignore-path .eslintignore movies/*.js",
+    "integration": "jest --verbose --watch movies/*.integration.js",
     "quality": "AWS_SDK_LOAD_CONFIG=1 serverless offline --exec 'npm run coverage' --dontPrintOutput start",
     "prepush": "npm run validate",
     "postinstall": "serverless dynamodb install",
-    "test": "jest --verbose --watch movies/",
-    "validate": "cross-env CI=true npm-run-all --parallel lint"
+    "test": "jest --verbose --watch movies/*.test.js",
+    "unit": "jest --coverage --silent movies/*.test.js",
+    "validate": "cross-env CI=true npm-run-all --parallel lint unit"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -34,9 +36,12 @@
     "eslint-config-prettier": "^2.9.0",
     "husky": "^0.14.3",
     "jest": "^23.5.0",
+    "jest-fetch-mock": "^1.6.5",
     "npm-run-all": "^4.1.3"
   },
   "jest": {
-    "testMatch": ["**/?(*.)+(integration|test).js?(x)"]
+    "testMatch": [
+      "**/?(*.)+(integration|test).js?(x)"
+    ]
   }
 }
