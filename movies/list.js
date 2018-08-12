@@ -3,6 +3,8 @@
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
+const { sortMovies } = require('./utils');
+
 module.exports.list = (event, context, callback) => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
@@ -21,10 +23,13 @@ module.exports.list = (event, context, callback) => {
       return;
     }
 
+    const { sort } = event.queryStringParameters;
+    const movies = sort ? sortMovies(result.Items, sort) : result.Items;
+
     // create a response
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Items),
+      body: JSON.stringify(movies),
     };
     callback(null, response);
   });

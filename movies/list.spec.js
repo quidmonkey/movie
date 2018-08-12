@@ -1,5 +1,11 @@
-const { createMovie, getMovieModel, getToken, getURL, movies } = require('./test-utils');
-const { req, RequestError } = require('./utils');
+const {
+  createMovie,
+  getMovieModel,
+  getToken,
+  getURL,
+  movies
+} = require('./test-utils');
+const { req, RequestError, sortMovies } = require('./utils');
 
 require('./list');
 
@@ -31,6 +37,32 @@ it('/list - should get all movies', async () => {
     const match = movies.find((movie) => movie.title === record.title);
 
     expect(match).toBeDefined();
+  }
+});
+
+it('/list - should get all movies and sort them based on a given attribute', async () => {
+  // set longer jest timeout for this test
+  // as 5000 ms is the default
+  jest.setTimeout(10000);
+
+  for (const movie of movies) {
+    await createMovie(movie);
+  }
+
+  const token = await getToken();
+  const sortAttr = 'title';
+  const url = getURL(`/movies?sort=${sortAttr}`);
+  const opts = {
+    headers: {
+      Authorization: token
+    }
+  };
+
+  const expected = sortMovies(movies, sortAttr);
+  const actual = await req(url, opts);
+
+  for (let i = 0; i < movies.length; i++) {
+    expect(actual[i].title).toBe(expected[i].title);
   }
 });
 
