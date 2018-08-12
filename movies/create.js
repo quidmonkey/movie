@@ -19,7 +19,7 @@ module.exports.create = (event, context, callback) => {
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t create the movie.',
+      body: 'Validation Failed: Incorrect Movie Data Model.',
     });
     return;
   }

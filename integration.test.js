@@ -93,6 +93,19 @@ it('/create - should create a movie', async () => {
   expect(actual).toEqual(expected);
 });
 
+it('/create - should fail on a bad movie model', async () => {
+  try {
+    await createMovie({
+      title: 'foobarbaz'
+    });
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(400);
+    expect(err.message).toBe('Validation Failed: Incorrect Movie Data Model.')
+  }
+
+});
+
 it('/delete - should delete a movie', async () => {
   const movieModel = getMovieModel();
   const { token } = await createMovie(movieModel);
