@@ -115,11 +115,11 @@ it('/schema - should get the movies table schema', async () => {
   expect(res.table.tableName).toMatch('movies');
 });
 
-it.only('/update - should update a movie record', async () => {
+it('/update - should update a movie record', async () => {
   const movieModel = getMovieModel();
   const { title } = movieModel;
 
-  const { token } = await createMovie();
+  const { token } = await createMovie(movieModel);
   const url = getURL(`/movies/${title}`);
   const updatedMovieModel = merge(movieModel, { 
     rating: Math.ceil(Math.random() * 5)
