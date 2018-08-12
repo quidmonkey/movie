@@ -20,7 +20,7 @@ module.exports.update = (event, context, callback) => {
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t update the movie.',
+      body: 'Validation Failed - Incorrect Movie Data Model.',
     });
     return;
   }
