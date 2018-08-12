@@ -1,6 +1,8 @@
 const { getToken, getUser, getURL } = require('./test-utils');
 const { req, RequestError } = require('./utils');
 
+require('./token');
+
 it('/token - should fetch a token', async () => {
   const res = await getToken();
 

@@ -1,6 +1,8 @@
 const { getToken, getURL } = require('./test-utils');
 const { req, RequestError } = require('./utils');
 
+require('./schema');
+
 it('/schema - should get the movies table schema', async () => {
   const token = await getToken();
   const url = getURL('/movies/schema');

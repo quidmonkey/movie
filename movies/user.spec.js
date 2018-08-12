@@ -1,6 +1,8 @@
 const { getUser, getURL } = require('./test-utils');
 const { req, RequestError } = require('./utils');
 
+require('./user');
+
 it('/user - should create a user', async () => {
   const { res } = await getUser();
 

@@ -1,6 +1,8 @@
 const { createMovie, getMovieModel, getToken, getURL } = require('./test-utils');
 const { req, RequestError } = require('./utils');
 
+require('./delete');
+
 it('/delete - should delete a movie', async () => {
   const movieModel = getMovieModel();
   const { token } = await createMovie(movieModel);

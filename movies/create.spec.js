@@ -1,6 +1,8 @@
 const { createMovie, getMovieModel } = require('./test-utils');
 const { RequestError } = require('./utils');
 
+require('./create');
+
 it('/create - should create a movie', async () => {
   const movieModel = getMovieModel();
   const { movie } = await createMovie(movieModel);

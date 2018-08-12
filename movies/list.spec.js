@@ -1,6 +1,8 @@
 const { createMovie, getMovieModel, getToken, getURL, movies } = require('./test-utils');
 const { req, RequestError } = require('./utils');
 
+require('./list');
+
 it('/list - should get all movies', async () => {
   // set longer jest timeout for this test
   // as 5000 ms is the default

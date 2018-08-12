@@ -1,6 +1,8 @@
 const { createMovie, getMovieModel, getToken, getURL } = require('./test-utils');
 const { merge, req, RequestError } = require('./utils');
 
+require('./update');
+
 it('/update - should update a movie record', async () => {
   const movieModel = getMovieModel();
   const { title } = movieModel;
