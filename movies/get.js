@@ -4,6 +4,7 @@ const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
 module.exports.get = (event, context, callback) => {
+  console.log('~~~ event', event);
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
     Key: {

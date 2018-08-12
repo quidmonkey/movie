@@ -164,6 +164,25 @@ it('/get - should get a movie', async () => {
   expect(actual).toEqual(expected);
 });
 
+it('/get - should fail on a non-existant movie', async () => {
+  const token = await getToken();
+  const title = '';
+  const url = getURL(`/movies/${title}`);
+  const opts = {
+    headers: {
+      Authorization: token
+    }
+  };
+
+  try {
+    await req(url, opts);
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(501);
+    expect(err.message).toBe('Couldn\'t fetch the movie.');
+  }
+});
+
 it('/list - should get all movies', async () => {
   for (const movie of movies) {
     await createMovie(movie);
