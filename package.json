@@ -26,7 +26,7 @@
     "prepush": "npm run validate",
     "postinstall": "serverless dynamodb install",
     "test": "jest --verbose --watch movies/",
-    "validate": "cross-env CI=true npm-run-all --parallel lint quality"
+    "validate": "cross-env CI=true npm-run-all --parallel lint"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
