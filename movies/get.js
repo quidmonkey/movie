@@ -13,9 +13,19 @@ module.exports.get = async (event) => {
 
   try {
     const res = await dynamoDb.get(params).promise();
+    const movie = res.Item;
+
+    if (movie) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify(movie),
+      };
+    }
+
     return {
-      statusCode: 200,
-      body: JSON.stringify(res.Item),
+      statusCode: 404,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Movie not found.'
     };
   } catch(err) {
     console.error('~~~ DynamoDb Get error', err);

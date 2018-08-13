@@ -18,6 +18,7 @@ it('/create - should fail on a bad movie model', async () => {
     await createMovie({
       title: 'foobarbaz'
     });
+    throw new Error('Ruh Roh. This should never execute');
   } catch(err) {
     expect(err).toBeInstanceOf(RequestError);
     expect(err.statusCode).toBe(400);

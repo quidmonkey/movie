@@ -24,7 +24,7 @@ it('/get - should get a movie', async () => {
 
 it('/get - should fail on a non-existant movie', async () => {
   const token = await getToken();
-  const title = '';
+  const title = 'foobarbazqux';
   const url = getURL(`/movies/${title}`);
   const opts = {
     headers: {
@@ -34,9 +34,10 @@ it('/get - should fail on a non-existant movie', async () => {
 
   try {
     await req(url, opts);
+    throw new Error('Ruh Roh. This should never execute');
   } catch(err) {
     expect(err).toBeInstanceOf(RequestError);
-    expect(err.statusCode).toBe(501);
-    expect(err.message).toBe('Couldn\'t fetch the movie.');
+    expect(err.statusCode).toBe(404);
+    expect(err.message).toBe('Movie not found.');
   }
 });
