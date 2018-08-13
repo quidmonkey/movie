@@ -28,7 +28,7 @@ module.exports.token = (event, context, callback) => {
   };
 
   dynamoDb.get(params, (error, result) => {
-    if (error) {
+    if (error || !result.Item) {
       console.error('~~~ DynamoDB GET User error', error);
       callback(null, {
         statusCode: error.statusCode || 501,
