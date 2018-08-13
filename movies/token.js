@@ -7,17 +7,17 @@ const dynamoDb = ddb.doc;
 const config = require('./config');
 const schema = Joi.object().keys(config.schemas.user);
 
-module.exports.token = (event, context, callback) => {
+module.exports.token = async (event) => {
   const data = JSON.parse(event.body);
   const certificate = Joi.validate(data, schema);
 
   if (certificate.error) {
     console.error('~~~ Validation Failed', certificate.error);
-    callback(null, {
+    return {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
       body: 'Incorrect User Data - POST Body requires a username & an alphanumeric password of at least 8 characters.'
-    });
+    };
   }
 
   const params = {
@@ -27,19 +27,17 @@ module.exports.token = (event, context, callback) => {
     },
   };
 
-  dynamoDb.get(params, (error, result) => {
-    if (error || !result.Item) {
-      console.error('~~~ DynamoDB GET User error', error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Unable to serve token - unable to fetch user.',
-      });
-      return;
-    }
+  try {
+    const res = await dynamoDb.get(params).promise();
+    const user = res.Item;
 
-    const user = result.Item;
-    let response;
+    if (!user) {
+      return {
+        statusCode: 409,
+        headers: { 'Content-Type': 'text/plain' },
+        body: 'Unable to serve token - user does not exist.'
+      };
+    }
 
     if (bcrypt.compareSync(data.password, user.password)) {
       const token = jwt.sign(
@@ -48,18 +46,23 @@ module.exports.token = (event, context, callback) => {
         { expiresIn: config.auth.jwt.expiresIn }
       );
 
-      response = {
+      return {
         statusCode: 200,
         body: JSON.stringify({ token })
       };
     } else {
-      response = {
+      return {
         statusCode: 403,
         headers: { 'Content-Type': 'text/plain' },
         body: 'Unable to serve token - incorrect username or password.',
       };
     }
-
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDB GET User error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Unable to serve token - unable to fetch user.',
+    };
+  }
 };

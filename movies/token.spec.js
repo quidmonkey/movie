@@ -12,7 +12,7 @@ it('/token - should fetch a token', async () => {
   expect(actual).toBe(expected);
 });
 
-it('/token - should fail on bad user data', async () => {
+it('/token - should fail on invalid user data', async () => {
   await getUser();
   const user = {
     username: 'foo'
@@ -31,6 +31,27 @@ it('/token - should fail on bad user data', async () => {
   }
 });
 
+it('/token - should fail on non-existant user', async () => {
+  await getUser();
+  const user = {
+    username: 'mrfoobarbaz',
+    password: Date.now().toString()
+  };
+  const url = getURL('/movies/token');
+  const opts = {
+    method: 'POST',
+    body: JSON.stringify(user)
+  };
+  try {
+    await req(url, opts);
+    throw new Error('Ruh Roh. This should never execute');
+  } catch(err) {
+    expect(err).toBeInstanceOf(RequestError);
+    expect(err.statusCode).toBe(409);
+    expect(err.message).toBe('Unable to serve token - user does not exist.');
+  }
+});
+
 it('/token - should fail on mismatched password', async () => {
   const { user } = await getUser();
   const newUser = {
@@ -44,21 +65,10 @@ it('/token - should fail on mismatched password', async () => {
   };
   try {
     await req(url, opts);
+    throw new Error('Ruh Roh. This should never execute');
   } catch(err) {
     expect(err).toBeInstanceOf(RequestError);
     expect(err.statusCode).toBe(403);
     expect(err.message).toBe('Unable to serve token - incorrect username or password.');
-  }
-});
-
-it('/token - should fail on an incorrect DynamoDb call', async () => {
-  process.env.DYNAMODB_USER_TABLE = 'foobar';
-
-  try {
-    await getToken();
-  } catch(err) {
-    expect(err).toBeInstanceOf(RequestError);
-    expect(err.statusCode).toBe(501);
-    expect(err.message).toBe('Unable to serve token - unable to fetch user.');
   }
 });
