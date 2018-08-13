@@ -23,7 +23,7 @@
     "dev": "AWS_SDK_LOAD_CONFIG=1 serverless offline start",
     "lint": "eslint --fix --quiet --ignore-path .eslintignore movies/*.js",
     "integration": "jest --verbose --watch movies/*.spec.js",
-    "quality": "AWS_SDK_LOAD_CONFIG=1 serverless offline --exec 'npm run coverage' --dontPrintOutput start",
+    "quality": "AWS_SDK_LOAD_CONFIG=1 serverless offline --exec 'npm run coverage' start",
     "prepush": "npm run validate",
     "postinstall": "serverless dynamodb install",
     "test": "jest --verbose --watch movies/*.test.js",
