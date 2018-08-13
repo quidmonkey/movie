@@ -3,28 +3,23 @@
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.raw;
 
-module.exports.schema = (event, context, callback) => {
+module.exports.schema = async (event) => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
   };
 
-  dynamoDb.describeTable(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error('~~~', error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch table schema.',
-      });
-      return;
-    };
-
-    // create a response
-    const response = {
+  try {
+    const res = await dynamoDb.describeTable(params).promise();
+    return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify(res),
     };
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDb Describe error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t fetch table schema.',
+    };
+  }
 };
