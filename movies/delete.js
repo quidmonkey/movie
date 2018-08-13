@@ -3,7 +3,7 @@
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
-module.exports.delete = (event, context, callback) => {
+module.exports.delete = async (event) => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
     Key: {
@@ -11,24 +11,18 @@ module.exports.delete = (event, context, callback) => {
     },
   };
 
-  // delete the todo from the database
-  dynamoDb.delete(params, (error) => {
-    // handle potential errors
-    if (error) {
-      console.error('~~~', error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t remove the movie.',
-      });
-      return;
-    }
-
-    // create a response
-    const response = {
+  try {
+    await dynamoDb.delete(params).promise();
+    return {
       statusCode: 200,
       body: JSON.stringify({}),
     };
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDb Delete error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t remove the movie.',
+    };
+  }
 };
