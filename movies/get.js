@@ -3,8 +3,7 @@
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.doc;
 
-module.exports.get = (event, context, callback) => {
-  console.log('~~~ event', event);
+module.exports.get = async (event) => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
     Key: {
@@ -12,24 +11,18 @@ module.exports.get = (event, context, callback) => {
     },
   };
 
-  // fetch todo from the database
-  dynamoDb.get(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error('~~~', error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the movie.',
-      });
-      return;
-    }
-
-    // create a response
-    const response = {
+  try {
+    const res = await dynamoDb.get(params).promise();
+    return {
       statusCode: 200,
-      body: JSON.stringify(result.Item),
+      body: JSON.stringify(res.Item),
     };
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDb Get error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t fetch the movie.',
+    };
+  }
 };

@@ -40,25 +40,3 @@ it('/get - should fail on a non-existant movie', async () => {
     expect(err.message).toBe('Couldn\'t fetch the movie.');
   }
 });
-
-it('/get - should fail on an incorrect DynamoDb call', async () => {
-  process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
-  
-  const movieModel = getMovieModel();
-  const { token } = await createMovie(movieModel);
-  const { title } = movieModel;
-  const url = getURL(`/movies/${title}`);
-  const opts = {
-    headers: {
-      Authorization: token
-    }
-  };
-
-  try {
-    await req(url, opts);
-  } catch(err) {
-    expect(err).toBeInstanceOf(RequestError);
-    expect(err.statusCode).toBe(501);
-    expect(err.message).toBe('Couldn\'t fetch the movie.');
-  }
-});
