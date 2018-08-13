@@ -1,11 +1,10 @@
 const {
   createMovie,
-  getMovieModel,
   getToken,
   getURL,
   movies
 } = require('./test-utils');
-const { req, RequestError, sortMovies } = require('./utils');
+const { req, sortMovies } = require('./utils');
 
 require('./list');
 

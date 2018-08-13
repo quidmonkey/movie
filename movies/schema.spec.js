@@ -1,5 +1,5 @@
 const { getToken, getURL } = require('./test-utils');
-const { req, RequestError } = require('./utils');
+const { req } = require('./utils');
 
 require('./schema');
 
