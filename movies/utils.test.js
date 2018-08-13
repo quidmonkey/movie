@@ -67,18 +67,18 @@ it('getHTTPSOpts - should get a fetch request options that are HTTPS ready', () 
     body: 'foobar'
   };
   
-  const expected = {
+  const expected = merge({
     method: opts.method,
-    body: opts.body,
-    agent: HTTPSAgent
-  };
+    body: opts.body
+  }, HTTPSAgent);
   const actual = getHTTPSOpts(opts);
 
   expect(actual).toEqual(expected);
 });
 
 it('HTTPSAgent - should be an instanceof https.Agent object', () => {
-  expect(HTTPSAgent).toBeInstanceOf(https.Agent);
+  const { agent } = HTTPSAgent;
+  expect(agent).toBeInstanceOf(https.Agent);
 });
 
 it('isAuthorized - should authorize a user against all app scopes', () => {

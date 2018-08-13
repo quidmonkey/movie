@@ -46,7 +46,7 @@ module.exports.getNoCacheUrl = getNoCacheUrl;
  * @return {Object}     HTTPS fetch request options
  */
 const getHTTPSOpts = (opts) => {
-  return merge(opts, { agent: HTTPSAgent });
+  return merge(opts, HTTPSAgent);
 };
 module.exports.getHTTPSOpts = getHTTPSOpts;
 
@@ -54,9 +54,14 @@ module.exports.getHTTPSOpts = getHTTPSOpts;
  * @type {Object}
  * HTTPS agent for secure localhost requests
  */
-const HTTPSAgent = new https.Agent({
-  ca: fs.readFileSync('auth/cert.pem'), 
-});
+const HTTPSAgent = process.env.NODE_ENV === 'local' ?
+  {
+    agent: new https.Agent({
+      ca: fs.readFileSync('auth/cert.pem'), 
+    })
+  }
+  :
+  {};
 module.exports.HTTPSAgent = HTTPSAgent;
 
 /**
@@ -107,6 +112,7 @@ const req = async (url, opts) => {
   const httpsOpts = url.includes('https') ? getHTTPSOpts(opts) : opts;
   const res = await fetch(noCacheUrl, httpsOpts);
   const { status } = res;
+
 
   if (status < 600 && status >= 400) {
     const message = await res.text();
