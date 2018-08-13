@@ -28,7 +28,7 @@
     "postinstall": "serverless dynamodb install",
     "test": "jest --verbose --watch",
     "unit": "jest --coverage --silent movies/*.test.js",
-    "validate": "cross-env CI=true npm-run-all --parallel lint unit"
+    "validate": "cross-env CI=true npm-run-all --parallel lint quality"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
