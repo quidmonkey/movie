@@ -1,5 +1,5 @@
-const { createMovie, getMovieModel, getToken, getURL } = require('./test-utils');
-const { req, RequestError } = require('./utils');
+const { createMovie, getMovieModel, getURL } = require('./test-utils');
+const { req } = require('./utils');
 
 require('./delete');
 
