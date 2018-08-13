@@ -9,7 +9,7 @@ const config = require('./config');
 const { format, length, releaseYear, rating } = config.schemas.movie;
 const schema = Joi.object().keys({ format, length, releaseYear, rating });
 
-module.exports.update = (event, context, callback) => {
+module.exports.update = async (event) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
   const certificate = Joi.validate(data, schema);
@@ -17,12 +17,11 @@ module.exports.update = (event, context, callback) => {
   // validation
   if (certificate.error) {
     console.error('~~~ Validation Failed', certificate.error);
-    callback(null, {
+    return {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
       body: 'Validation Failed - Incorrect Movie Data Model.',
-    });
-    return;
+    };
   }
 
   const params = {
@@ -46,24 +45,19 @@ module.exports.update = (event, context, callback) => {
     ReturnValues: 'ALL_NEW',
   };
 
-  // update the todo in the database
-  dynamoDb.update(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error(error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t update the movie.',
-      });
-      return;
-    }
-
-    // create a response
-    const response = {
+  try {
+    const res = await dynamoDb.update(params).promise();
+    console.log('~~~ res', res);
+    return {
       statusCode: 200,
-      body: JSON.stringify(result.Attributes),
+      body: JSON.stringify(res.Attributes)
     };
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDb Update error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t update the movie.'
+    };
+  }
 };

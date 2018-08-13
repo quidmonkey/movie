@@ -37,45 +37,17 @@ it('/update - should fail on a bad movie model', async () => {
   const url = getURL(`/movies/${title}`);
   const opts = {
     method: 'PUT',
-    body: '',
+    body: JSON.stringify({}),
     headers: {
       Authorization: token
     }
   };
   try {
     await req(url, opts);
+    throw new Error('Ruh Roh. This should never execute');
   } catch(err) {
     expect(err).toBeInstanceOf(RequestError);
     expect(err.statusCode).toBe(400);
     expect(err.message).toBe('Validation Failed - Incorrect Movie Data Model.');
-  }
-});
-
-it('/update - should fail on an incorrect DynamoDb call', async () => {
-  process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
-
-  const movieModel = getMovieModel();
-  const { title } = movieModel;
-
-  const { token } = await createMovie(movieModel);
-  const url = getURL(`/movies/${title}`);
-  const updatedMovieModel = merge(movieModel, { 
-    rating: Math.ceil(Math.random() * 5)
-  });
-  delete updatedMovieModel.title;
-  const opts = {
-    method: 'PUT',
-    body: JSON.stringify(updatedMovieModel),
-    headers: {
-      Authorization: token
-    }
-  };
-  
-  try {
-    await req(url, opts);
-  } catch(err) {
-    expect(err).toBeInstanceOf(RequestError);
-    expect(err.statusCode).toBe(501);
-    expect(err.message).toBe('Couldn\'t update the movie.');
   }
 });
