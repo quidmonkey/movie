@@ -65,24 +65,3 @@ it('/list - should get all movies and sort them based on a given attribute', asy
     expect(actual[i].title).toBe(expected[i].title);
   }
 });
-
-it('/list - should fail on an incorrect DynamoDb call', async () => {
-  process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
-  
-  const movieModel = getMovieModel();
-  const { token } = await createMovie(movieModel);
-  const url = getURL('/movies');
-  const opts = {
-    headers: {
-      Authorization: token
-    }
-  };
-
-  try {
-    await req(url, opts);
-  } catch(err) {
-    expect(err).toBeInstanceOf(RequestError);
-    expect(err.statusCode).toBe(501);
-    expect(err.message).toBe('Couldn\'t fetch any movies.');
-  }
-});

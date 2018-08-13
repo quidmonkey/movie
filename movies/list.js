@@ -5,32 +5,26 @@ const dynamoDb = ddb.doc;
 
 const { sortMovies } = require('./utils');
 
-module.exports.list = (event, context, callback) => {
+module.exports.list = async (event) => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
   };
   
-  // fetch all todos from the database
-  dynamoDb.scan(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error('~~~', error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch any movies.',
-      });
-      return;
-    }
-
+  try {
+    const res = await dynamoDb.scan(params).promise();
     const { sort } = event.queryStringParameters;
-    const movies = sort ? sortMovies(result.Items, sort) : result.Items;
+    const movies = sort ? sortMovies(res.Items, sort) : res.Items;
 
-    // create a response
-    const response = {
+    return {
       statusCode: 200,
       body: JSON.stringify(movies),
     };
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDb Scan error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t fetch any movies.',
+    };
+  }
 };
