@@ -24,17 +24,3 @@ it('/create - should fail on a bad movie model', async () => {
     expect(err.message).toBe('Validation Failed - Incorrect Movie Data Model.');
   }
 });
-
-it('/create - should fail on an incorrect DynamoDb call', async () => {
-  process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
-  
-  const movieModel = getMovieModel();
-  
-  try {
-    await createMovie(movieModel);
-  } catch(err) {
-    expect(err).toBeInstanceOf(RequestError);
-    expect(err.statusCode).toBe(501);
-    expect(err.message).toBe('Couldn\'t create the movie.');
-  }
-});

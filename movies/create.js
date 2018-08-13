@@ -9,19 +9,18 @@ const config = require('./config');
 
 const schema = Joi.object().keys(config.schemas.movie);
 
-module.exports.create = (event, context, callback) => {
+module.exports.create = async (event) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
   const certificate = Joi.validate(data, schema);
 
   if (certificate.error) {
     console.error('~~~ Validation Failed', certificate.error);
-    callback(null, {
+    return {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
       body: 'Validation Failed - Incorrect Movie Data Model.',
-    });
-    return;
+    };
   }
 
   const params = {
@@ -39,24 +38,18 @@ module.exports.create = (event, context, callback) => {
     },
   };
 
-  // write the todo to the database
-  dynamoDb.put(params, (error) => {
-    // handle potential errors
-    if (error) {
-      console.error('~~~', error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t create the movie.',
-      });
-      return;
-    }
-
-    // create a response
-    const response = {
+  try {
+    await dynamoDb.put(params).promise();
+    return {
       statusCode: 200,
       body: JSON.stringify(params.Item),
     };
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDb Create Movie error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t create the movie.',
+    };
+  }
 };
