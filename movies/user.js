@@ -7,18 +7,18 @@ const dynamoDb = ddb.doc;
 const config = require('./config');
 const schema = Joi.object().keys(config.schemas.user);
 
-module.exports.user = (event, context, callback) => {
+module.exports.user = async (event) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
   const certificate = Joi.validate(data, schema);
 
   if (certificate.error) {
     console.error('~~~ Validation Failed', certificate.error);
-    callback(null, {
+    return {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
       body: 'Incorrect User Data - POST Body requires a username & an alphanumeric password of at least 8 characters.',
-    });
+    };
   }
 
   const hash = bcrypt.hashSync(data.password, config.auth.saltRounds);
@@ -35,22 +35,18 @@ module.exports.user = (event, context, callback) => {
     },
   };
 
-  dynamoDb.put(params, (error) => {
-    // handle potential errors
-    if (error) {
-      console.error('~~~ DynamoDB User PUT error', error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t create user.',
-      });
-      return;
-    }
-
-    const response = {
+  try {
+    await dynamoDb.put(params).promise();
+    return {
       statusCode: 200,
       body: JSON.stringify('User created successfully.')
     };
-    callback(null, response);
-  });
+  } catch(err) {
+    console.error('~~~ DynamoDB User PUT error', err);
+    return {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t create user.'
+    };
+  }
 };
