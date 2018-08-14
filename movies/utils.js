@@ -54,14 +54,11 @@ module.exports.getHTTPSOpts = getHTTPSOpts;
  * @type {Object}
  * HTTPS agent for secure localhost requests
  */
-const HTTPSAgent = process.env.NODE_ENV === 'local' ?
-  {
-    agent: new https.Agent({
-      ca: fs.readFileSync('auth/cert.pem'), 
-    })
-  }
-  :
-  {};
+const HTTPSAgent = {
+  agent: new https.Agent({
+    ca: fs.readFileSync('auth/cert.pem'), 
+  })
+};
 module.exports.HTTPSAgent = HTTPSAgent;
 
 /**
@@ -109,7 +106,7 @@ module.exports.merge = merge;
  */
 const req = async (url, opts) => {
   const noCacheUrl = getNoCacheUrl(url);
-  const httpsOpts = url.includes('https') ? getHTTPSOpts(opts) : opts;
+  const httpsOpts = url.includes('https') && url.includes('localhost') ? getHTTPSOpts(opts) : opts;
   const res = await fetch(noCacheUrl, httpsOpts);
   const { status } = res;
 
