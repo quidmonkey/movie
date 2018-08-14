@@ -27,7 +27,7 @@
     "integration": "jest --coverage --silent movies/*.spec.js",
     "quality": "AWS_SDK_LOAD_CONFIG=1 serverless offline --exec 'npm run coverage' start && npm run kill-dynamo",
     "prepush": "npm run validate",
-    "postinstall": "serverless dynamodb install",
+    "postinstall": "auth/create-secret.sh && serverless dynamodb install",
     "test": "jest --verbose --watch",
     "unit": "jest --coverage --silent movies/*.test.js",
     "validate": "cross-env CI=true npm-run-all --parallel lint quality"
