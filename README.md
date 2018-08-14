@@ -1,19 +1,19 @@
 <!--
 title: AWS Serverless REST API example in NodeJS
-description: This example demonstrates how to setup a RESTful Web Service allowing you to create, list, get, update and delete Todos. DynamoDB is used to store the data. 
+description: This example demonstrates how to setup a RESTful Web Service allowing you to create, list, get, update and delete movies. DynamoDB is used to store the data. 
 layout: Doc
 -->
 # Serverless REST API
 
 This is a fork of the Serverless [aws-node-rest-api-with-dynamodb](https://github.com/serverless/examples/tree/master/aws-node-rest-api-with-dynamodb) project.
 
-This example demonstrates how to setup a [RESTful Web Services](https://en.wikipedia.org/wiki/Representational_state_transfer#Applied_to_web_services) allowing you to create, list, get, update and delete Movies. DynamoDB is used to store the data. This is just an example and of course you could use any data storage as a backend.
+This project is a CRUD Rest API for a movies database that uses AWS Lambdas, SSM (Secrets), DynamoDB, and the API Gateway. It is written in Node 8.10.3, and makes use of async/await. It uses ESLint, Jest, and Husky to lint, test (both unit & integration with coverage reports), and add git hooks for code quality. It features HTTPS + JWT for authentication & authorization. A self-signed cert is provided for localhost requests (local development).
 
 ## Structure
 
-This service has a separate directory for all the todo operations. For each operation exactly one file exists e.g. `todos/delete.js`. In each of these files there is exactly one function which is directly attached to `module.exports`.
+This service has a separate directory for all the movie operations. For each operation exactly one file exists e.g. `movies/delete.js`. In each of these files there is exactly one function which is directly attached to `module.exports`.
 
-The idea behind the `todos` directory is that in case you want to create a service containing multiple resources e.g. users, notes, comments you could do so in the same service. While this is certainly possible you might consider creating a separate service for each resource. It depends on the use-case and your preference.
+The idea behind the `movies` directory is that in case you want to create a service containing multiple resources e.g. users, notes, comments you could do so in the same service. While this is certainly possible you might consider creating a separate service for each resource. It depends on the use-case and your preference.
 
 ## Use-cases
 
@@ -22,11 +22,44 @@ The idea behind the `todos` directory is that in case you want to create a servi
 
 ## Setup
 
-You will first need to setup your [AWS credentials](https://github.com/serverless/serverless/blob/master/docs/providers/aws/guide/credentials.md) in order to use the serverless framework.
+You will first need to setup your [AWS credentials](https://github.com/serverless/serverless/blob/master/docs/providers/aws/guide/credentials.md) in order to use the serverless framework. You will also need Node 8.10.3 installed.
+
+Once both of these are done, you can clone this repo and run the following cmd:
 
 ```bash
 npm install
 ```
+
+This will run install all Node & serverless dependencies, and generate an auth/secrets.json file for you to use. You can replace this file at any time with your own secret value.
+
+## Usage
+
+Run tests using the following command:
+```bash
+npm run quality
+```
+
+Run serverless locally with the following command:
+```bash
+npm run dev
+```
+
+Once serverless-offline is up & running, you can populate DynamoDB with the following command:
+```bash
+node load-movies.js
+```
+
+After this you can read the movie data using this cmd:
+```bash
+node get-movies.js
+```
+
+Both the get-movies.js and load-movies.js both take an optional ```--domain``` arg that lets you specify an origin. By default, this is localhost; but once you deploy your Lambdas, you can specify the API Gateway endpoints:
+```bash 
+node load-movies.js --domain https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev
+```
+
+Inspect the package.json file for additional npm run scripts.
 
 ## Deploy
 
@@ -39,13 +72,6 @@ npm run build
 The expected result should be similar to:
 
 ```bash
-Serverless: Packaging service…
-Serverless: Uploading CloudFormation file to S3…
-Serverless: Uploading service .zip file to S3…
-Serverless: Updating Stack…
-Serverless: Checking Stack update progress…
-Serverless: Stack update finished…
-
 Service Information
 service: movies
 stage: dev
@@ -55,31 +81,28 @@ api keys:
   None
 endpoints:
   POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies
-  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies
-  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
-  PUT - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
   DELETE - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies
   GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/schema
+  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/token
+  PUT - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
+  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/user
 functions:
+  authorize: movies-dev-authorize
   create: movies-dev-create
-  list: movies-dev-list
-  get: movies-dev-get
-  update: movies-dev-update
   delete: movies-dev-delete
+  get: movies-dev-get
+  list: movies-dev-list
   schema: movies-dev-schema
+  token: movies-dev-token
+  update: movies-dev-update
+  user: movies-dev-user
+
+  Serverless: Removing old service artifacts from S3...
 ```
 
-## Usage
-
-Run serverless locally with the following command:
-```bash
-npm run dev
-```
-
-Once serverless-offline is up & running, you can populate DynamoDB with the following command:
-```bash
-node load-movies.js
-```
+## API
 
 You can create a user and get a token locally with the following commands:
 
@@ -155,7 +178,7 @@ Example Result:
 ### Delete a Movie
 
 ```bash
-# Replace the <id> part with a real id from your todos table
+# Replace the <id> part with a real id from your movies table
 curl -X DELETE "$( echo 'https://localhost:3000/movies/Star Wars: Episode IV - A New Hope' | sed 's/ /%20/g' )" --cacert auth/cert.pem
 ```
 
