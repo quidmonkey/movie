@@ -7,6 +7,7 @@ custom:
     start:
       inMemory: true
       migrate: true
+  secrets: ${file(auth/secrets.json)}
   serverless-offline:
     httpsProtocol: 'auth'
 
@@ -16,7 +17,7 @@ provider:
   environment:
     DYNAMODB_MOVIES_TABLE: node-${self:service}-${opt:stage, self:provider.stage}
     DYNAMODB_USER_TABLE: node-${self:service}-user-${opt:stage, self:provider.stage}
-    JWT_SECRET: ${ssm:JWT_SECRET}
+    JWT_SECRET: ${self:custom.secrets.JWT_SECRET, ssm:JWT_SECRET}
   iamRoleStatements:
     - Effect: Allow
       Action:

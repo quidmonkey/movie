@@ -1,4 +1,4 @@
 node_modules
 .serverless
 coverage
-auth/.secret
+auth/secrets.json
