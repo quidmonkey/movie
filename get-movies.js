@@ -21,10 +21,7 @@ const getOpts = (opts) => {
   return merge(opts, httpsOpts);
 };
 
-const loadMovies = async () => {
-
-  const file = fs.readFileSync('movies.json', 'utf8');
-  const { movies } = JSON.parse(file);
+const listMovies = async () => {
   const user = {
     username: Date.now().toString(),
     password: Date.now().toString()
@@ -39,23 +36,13 @@ const loadMovies = async () => {
 
   const tokenRes = await fetch(getURL('/movies/token'), opts);
   const { token } = await tokenRes.json();
+
   console.log('~~~ token', token);
 
-  movies.forEach(async (movie) => {
-    const opts = getOpts({
-      method: 'POST',
-      body: JSON.stringify(movie),
-      headers: {
-        Authorization: token
-      }
-    });
-    
-    const movieRes = await fetch(getURL('/movies'), opts);
-    console.log('~~~ movieRes', await movieRes.json());
-  });
-};
-module.exports.loadMovies = loadMovies;
+  const listOpts = getOpts({});
+  const listRes = await(fetch(getURL('/movies')), listOpts);
 
-if (!module.parent) {
-  loadMovies();
-}
+  console.log('~~~ listRes', listRes);
+};
+
+listMovies();
