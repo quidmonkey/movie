@@ -39,10 +39,14 @@ const listMovies = async () => {
 
   console.log('~~~ token', token);
 
-  const listOpts = getOpts({});
-  const listRes = await(fetch(getURL('/movies')), listOpts);
+  const listOpts = getOpts({
+    headers: {
+      Authorization: token
+    }
+  });
+  const listRes = await fetch(getURL('/movies'), listOpts);
 
-  console.log('~~~ listRes', listRes);
+  console.log('~~~ listRes json', await listRes.json());
 };
 
 listMovies();
