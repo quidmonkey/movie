@@ -12,7 +12,7 @@ module.exports.list = async (event) => {
   
   try {
     const res = await dynamoDb.scan(params).promise();
-    const { sort } = event.queryStringParameters;
+    const sort  = event.queryStringParameters ? event.queryStringParameters.sort : false;
     const movies = sort ? sortMovies(res.Items, sort) : res.Items;
 
     return {
