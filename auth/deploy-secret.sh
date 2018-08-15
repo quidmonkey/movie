@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cwd=$(dirname ${BASH_SOURCE[0]})
-
 ##
 # Get the value of a given key in a json file
 #
@@ -20,16 +18,33 @@ function get_json_value() {
   $src | grep -o "\"$key\": \"[^\"]*" | grep -o '[^"]*$'
 }
 
-JWT_SECRET=$(get_json_value "cat $cwd/secrets.json" "JWT_SECRET")
+##
+#
+# Arguments:
+#   1. json key name
+#   2. json filepath
+#
+# Returns:
+#   None
+#
+##
+function deploy_json_secret() {
+  local key=$1
+  local json_filepath=$2
 
-[ -z "$JWT_SECRET" ] && echo "JWT_SECRET is not set" && exit 1
+  LOCAL_SECRET=$(get_json_value "cat $json_filepath" $key)
 
-AWS_RES=$(aws ssm get-parameters --names "JWT_SECRET")
-AWS_JWT_SECRET=$(get_json_value "echo $AWS_RES" "Value")
+  [ -z "$LOCAL_SECRET" ] && echo "$key is not set" && exit 1
 
-if [ -z "$AWS_JWT_SECRET" ] || [ "$JWT_SECRET" != "$AWS_JWT_SECRET" ]; then
-  echo "~~~ Deploying New Key to SSM"
-  aws ssm put-parameter --overwrite --name JWT_SECRET --type String --value $JWT_SECRET
-else
-  echo "~~~ JWT_SECRET up-to-date. No SSM deploy needed."
-fi
+  AWS_RES=$(aws ssm get-parameters --names "$key")
+  AWS_SECRET=$(get_json_value "echo $AWS_RES" "Value")
+
+  if [ -z "$AWS_SECRET" ] || [ "$LOCAL_SECRET" != "$AWS_SECRET" ]; then
+    echo "~~~ Deploying New Key to SSM"
+    # aws ssm put-parameter --overwrite --name $key --type String --value $LOCAL_SECRET
+  else
+    echo "~~~ $key up-to-date. No SSM deploy needed."
+  fi
+}
+
+deploy_json_secret $@
