@@ -11,7 +11,7 @@ This project is a CRUD Rest API for a movies database that uses AWS Lambdas, SSM
 
 ## Structure
 
-This service has a separate directory for all the movie operations. For each operation exactly one file exists e.g. `movies/delete.js`. In each of these files there is exactly one function which is directly attached to `module.exports`.
+This service has a separate directory for all the movie operations. For each operation exactly one file exists e.g. `src/delete.js`. In each of these files there is exactly one function which is directly attached to `module.exports`.
 
 The idea behind the `movies` directory is that in case you want to create a service containing multiple resources e.g. users, notes, comments you could do so in the same service. While this is certainly possible you might consider creating a separate service for each resource. It depends on the use-case and your preference.
 

@@ -40,10 +40,10 @@ provider:
 
 functions:
   authorize:
-    handler: movies/authorize.authorize
+    handler: src/authorize.authorize
 
   create:
-    handler: movies/create.create
+    handler: src/create.create
     events:
       - http:
           path: movies
@@ -52,7 +52,7 @@ functions:
           authorizer: authorize
 
   delete:
-    handler: movies/delete.delete
+    handler: src/delete.delete
     events:
       - http:
           path: movies/{title}
@@ -61,7 +61,7 @@ functions:
           authorizer: authorize
 
   get:
-    handler: movies/get.get
+    handler: src/get.get
     events:
       - http:
           path: movies/{title}
@@ -70,7 +70,7 @@ functions:
           authorizer: authorize
 
   list:
-    handler: movies/list.list
+    handler: src/list.list
     events:
       - http:
           path: movies
@@ -79,7 +79,7 @@ functions:
           authorizer: authorize
 
   schema:
-    handler: movies/schema.schema
+    handler: src/schema.schema
     events:
       - http:
           path: movies/schema
@@ -88,7 +88,7 @@ functions:
           authorizer: authorize
 
   token:
-    handler: movies/token.token
+    handler: src/token.token
     events:
       - http:
           path: movies/token
@@ -96,7 +96,7 @@ functions:
           cors: true
 
   update:
-    handler: movies/update.update
+    handler: src/update.update
     events:
       - http:
           path: movies/{title}
@@ -105,7 +105,7 @@ functions:
           authorizer: authorize
 
   user:
-    handler: movies/user.user
+    handler: src/user.user
     events:
       - http:
           path: movies/user
