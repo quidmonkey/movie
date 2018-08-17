@@ -46,17 +46,17 @@ npm run dev
 
 Once serverless-offline is up & running, you can populate DynamoDB with the following command:
 ```bash
-node load-movies.js
+node misc/load-movies.js
 ```
 
 After this you can read the movie data using this cmd:
 ```bash
-node get-movies.js
+node misc/get-movies.js
 ```
 
 Both the get-movies.js and load-movies.js both take an optional ```--domain``` arg that lets you specify an origin. By default, this is localhost; but once you deploy your Lambdas, you can specify the API Gateway endpoints:
 ```bash 
-node load-movies.js --domain https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev
+node misc/load-movies.js --domain https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev
 ```
 
 Inspect the package.json file for additional npm run scripts.
