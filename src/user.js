@@ -7,7 +7,7 @@ const dynamoDb = ddb.doc;
 const config = require('./config');
 const schema = Joi.object().keys(config.schemas.user);
 
-module.exports.user = async (event) => {
+module.exports.user = async (event, context) => {
   const timestamp = Date.now();
   const data = JSON.parse(event.body);
   const certificate = Joi.validate(data, schema);
