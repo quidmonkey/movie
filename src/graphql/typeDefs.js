@@ -10,9 +10,9 @@ module.exports = gql`
   }
 
   type Query {
-    getMovie(title: String!): Movie!
-
-    getUser(username: String!): User!
+    movie(title: String!): Movie!
+    movies: [Movie],
+    user(username: String!): User!
   }
 
   type User {

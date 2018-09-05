@@ -13,6 +13,16 @@ const getMovie = async ({ title }) => {
   return res.Item;
 };
 
+const getMovies = async () => {
+  const params = {
+    TableName: process.env.DYNAMODB_MOVIES_TABLE
+  };
+
+  const res = await dynamoDb.scan(params).promise();
+
+  return res.Items;
+};
+
 const getUser = async ({ username }) => {
   const user = await new Promise.resolve(username);
   return user;
@@ -20,7 +30,8 @@ const getUser = async ({ username }) => {
 
 module.exports = {
   Query: {
-    getMovie: async (root, args) => await getMovie(args),
-    getUser: async (root, args) => await getUser(args)
+    movie: async (root, args) => await getMovie(args),
+    movies: async (root, args) => await getMovies(),
+    user: async (root, args) => await getUser(args)
   }
 };

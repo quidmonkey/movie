@@ -23,7 +23,7 @@ const graphqlRequest = async (url, document) => {
 const main = async () => {
   const url = 'https://localhost:3000/graphql';
   const document = `{
-    getMovie(title: "Star Wars: Episode IV - A New Hope"){
+    movie(title: "Star Wars: Episode IV - A New Hope"){
       title
       format
       length
