@@ -14,10 +14,4 @@ module.exports = gql`
     movies: [Movie],
     user(username: String!): User!
   }
-
-  type User {
-    username: String!
-    password: String!
-    scopes: [String!]
-  }
 `;

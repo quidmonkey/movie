@@ -23,15 +23,9 @@ const getMovies = async () => {
   return res.Items;
 };
 
-const getUser = async ({ username }) => {
-  const user = await new Promise.resolve(username);
-  return user;
-};
-
 module.exports = {
   Query: {
     movie: async (root, args) => await getMovie(args),
-    movies: async (root, args) => await getMovies(),
-    user: async (root, args) => await getUser(args)
+    movies: async (root, args) => await getMovies()
   }
 };
