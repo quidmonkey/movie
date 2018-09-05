@@ -89,6 +89,11 @@ const updateMovie = async ({ title, movie }) => {
 };
 
 module.exports = {
+  Formats: {
+    BLURAY: 'Blu-Ray',
+    DVD: 'DVD',
+    STREAMING: 'Streaming'
+  },
   Mutation: {
     createMovie: async (root, args) => await createMovie(args),
     updateMovie: async (root, args) => await updateMovie(args)

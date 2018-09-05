@@ -1,16 +1,22 @@
 const { gql } = require('apollo-server-lambda');
 
 module.exports = gql`
+  enum Formats {
+    BLURAY
+    DVD
+    STREAMING
+  }
+
   input CreateMovieInput {
     title: String!
-    format: String!
+    format: Formats!
     length: String!
     releaseYear: String!
     rating: Int!
   }
 
   input UpdateMovieInput {
-    format: String
+    format: Formats
     length: String
     releaseYear: String
     rating: Int
@@ -18,7 +24,7 @@ module.exports = gql`
 
   type Movie {
     title: String
-    format: String
+    format: Formats
     length: String
     releaseYear: String
     rating: Int
