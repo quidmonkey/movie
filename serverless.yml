@@ -74,16 +74,12 @@ functions:
     events:
       - http:
           path: graphql
+          method: get
+          cors: true
+      - http:
+          path: graphql
           method: post
           cors: true
-
-  # graphiql:
-  #   handler: src/graphql/graphiql.graphiql
-  #   events:
-  #     - http:
-  #         path: graphiql
-  #         method: get
-  #         cors: true
 
   list:
     handler: src/list.list
