@@ -48,9 +48,50 @@ const getMovies = async () => {
   return res.Items;
 };
 
+const updateMovie = async ({ title, movie }) => {
+  const ExpressionAttributeNames = Object.keys(movie)
+    .reduce((hash, key) => {
+      const expressionKey = `#movie_${key}`;
+
+      hash[expressionKey] = key;
+
+      return hash;
+    }, {});
+  const ExpressionAttributeValues = Object.entries(movie)
+    .reduce((hash, [key, val]) => {
+      const expressionKey = `:${key}`;
+
+      hash[expressionKey] = val;
+
+      return hash;
+    }, {});
+  const UpdateExpression = Object.keys(movie)
+    .reduce((str, key, index, arr) => {
+      const s = `${str}#movie_${key} = :${key}`;
+
+      return index < arr.length - 1 ? `${s}, ` : s;
+    }, 'SET ');
+
+  const params = {
+    TableName: process.env.DYNAMODB_MOVIES_TABLE,
+    Key: {
+      title: title,
+    },
+    ExpressionAttributeNames,
+    ExpressionAttributeValues,
+    UpdateExpression,
+    ReturnValues: 'UPDATED_NEW',
+  };
+
+  const res = await dynamoDb.update(params).promise();
+
+  return res.Attributes;
+};
+
 module.exports = {
   Mutation: {
-    createMovie: async (root, args) => await createMovie(args)
+    createMovie: async (root, args) => await createMovie(args),
+    updateMovie: async (root, args) => await updateMovie(args)
   },
   Query: {
     movie: async (root, args) => await getMovie(args),
