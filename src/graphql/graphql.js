@@ -1,7 +1,7 @@
 const { ApolloServer } = require('apollo-server-lambda');
 const ConstraintDirective = require('graphql-constraint-directive');
 
-const resolvers = require('./resolvers');
+const { resolvers } = require('./resolvers');
 const typeDefs = require('./typeDefs');
 
 const server = new ApolloServer({

@@ -3,6 +3,11 @@ const dynamoDb = ddb.doc;
 
 const uuid = require('uuid');
 
+/**
+ * Create a movie mutation
+ * @param {*} args  GraphQL mutation args
+ * @return {Object} Created movie
+ */
 const createMovie = async({ movie }) => {
   const { title, format, length, releaseYear, rating } = movie;
   const timestamp = Date.now();
@@ -25,7 +30,13 @@ const createMovie = async({ movie }) => {
 
   return movie;
 };
+module.exports.createMovie = createMovie;
 
+/**
+ * Get a movie query
+ * @param {*} args  GraphQL mutation args
+ * @return {Object} Fetched movie
+ */
 const getMovie = async ({ title }) => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
@@ -37,7 +48,12 @@ const getMovie = async ({ title }) => {
 
   return res.Item;
 };
+module.exports.getMovie = getMovie;
 
+/**
+ * Get a list of movies query
+ * @return {Array<Object>} Fetched movies
+ */
 const getMovies = async () => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE
@@ -47,9 +63,15 @@ const getMovies = async () => {
 
   return res.Items;
 };
+module.exports.getMovies = getMovies;
 
-const updateMovie = async ({ title, movie }) => {
-  const ExpressionAttributeNames = Object.keys(movie)
+/**
+ * Get the DynamoDb ExpressionAttributeNames to mutate a Movie object
+ * @param {Object} movie  Movie object
+ * @return {Object}       ExpressionAttributeNames
+ */
+const getMovieExpressionAttributeNames = (movie) => {
+  return Object.keys(movie)
     .reduce((hash, key) => {
       const expressionKey = `#movie_${key}`;
 
@@ -57,7 +79,16 @@ const updateMovie = async ({ title, movie }) => {
 
       return hash;
     }, {});
-  const ExpressionAttributeValues = Object.entries(movie)
+};
+module.exports.getMovieExpressionAttributeNames = getMovieExpressionAttributeNames;
+
+/**
+ * Get the DynamoDb ExpressionAttributeValues to mutate a Movie object
+ * @param {Object} movie  Movie object
+ * @return {Object}       ExpressionAttributeValues
+ */
+const getMovieExpressionAttributeValues = (movie) => {
+  return Object.entries(movie)
     .reduce((hash, [key, val]) => {
       const expressionKey = `:${key}`;
 
@@ -65,12 +96,33 @@ const updateMovie = async ({ title, movie }) => {
 
       return hash;
     }, {});
-  const UpdateExpression = Object.keys(movie)
+};
+module.exports.getMovieExpressionAttributeValues = getMovieExpressionAttributeValues;
+
+/**
+ * Get the DynamoDb UpdateExpression to mutate a Movie object
+ * @param {Object} movie  Movie object
+ * @return {string}       UpdateExpression
+ */
+const getMovieUpdateExpression = (movie) => {
+  return Object.keys(movie)
     .reduce((str, key, index, arr) => {
       const s = `${str}#movie_${key} = :${key}`;
 
       return index < arr.length - 1 ? `${s}, ` : s;
     }, 'SET ');
+};
+module.exports.getMovieUpdateExpression = getMovieUpdateExpression;
+
+/**
+ * Create a movie mutation
+ * @param {*} args  GraphQL mutation args
+ * @return {Object} Mutated movie args
+ */
+const updateMovie = async ({ title, movie }) => {
+  const ExpressionAttributeNames = getMovieExpressionAttributeNames(movie);
+  const ExpressionAttributeValues = getMovieExpressionAttributeValues(movie);
+  const UpdateExpression = getMovieUpdateExpression(movie);
 
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
@@ -87,8 +139,13 @@ const updateMovie = async ({ title, movie }) => {
 
   return res.Attributes;
 };
+module.exports.updateMovie = updateMovie;
 
-module.exports = {
+/**
+ * GraphQL Resolvers
+ * @type {Object} resolvers
+ */
+module.exports.resolvers = {
   Formats: {
     BLURAY: 'Blu-Ray',
     DVD: 'DVD',
