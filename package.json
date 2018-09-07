@@ -21,7 +21,8 @@
     "yargs": "^12.0.1"
   },
   "scripts": {
-    "build": "AWS_SDK_LOAD_CONFIG=1 bash auth/deploy-secret.sh JWT_SECRET auth/secrets.json && serverless deploy -v",
+    "build-dev": "AWS_SDK_LOAD_CONFIG=1 bash auth/deploy-secret.sh JWT_SECRET auth/secrets.json && serverless deploy -v --stage dev",
+    "build-prod": "AWS_SDK_LOAD_CONFIG=1 bash auth/deploy-secret.sh JWT_SECRET auth/secrets.json && serverless deploy -v --stage prod",
     "coverage": "jest --coverage --silent",
     "debug": "AWS_SDK_LOAD_CONFIG=1 SLS_DEBUG=1 serverless offline start",
     "dev": "AWS_SDK_LOAD_CONFIG=1 serverless offline start --noAuth",
