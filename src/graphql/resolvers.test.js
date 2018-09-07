@@ -8,7 +8,7 @@ const getMockFormat = (index) => mockFormatTypes[index];
 const getMockMovie = () => {
   return {
     format: getMockFormat(Math.round(Math.random() * mockFormatTypes.length)),
-    length: `${Math.round(Math.random() * 300)} mins`,
+    length: `${Math.round(Math.random() * 300)} min`,
     releaseYear: 1900 + Math.round(Math.random() * 200),
     rating: Math.round(Math.random() * 5)
   };
