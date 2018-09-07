@@ -10,6 +10,7 @@ const server = new ApolloServer({
   schemaDirectives: {
     constraint: ConstraintDirective
   },
+  playground: (process.env.NODE_ENV === 'local'),
   context: ({ event, context }) => ({
     headers: event.headers,
     functionName: context.functionName,

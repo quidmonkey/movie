@@ -14,10 +14,12 @@ custom:
 provider:
   name: aws
   runtime: nodejs8.10
+  stage: local
   environment:
     DYNAMODB_MOVIES_TABLE: node-${self:service}-${opt:stage, self:provider.stage}
     DYNAMODB_USER_TABLE: node-${self:service}-user-${opt:stage, self:provider.stage}
     JWT_SECRET: ${self:custom.secrets.JWT_SECRET, ssm:JWT_SECRET}
+    NODE_ENV: ${opt:stage, self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -73,13 +75,14 @@ functions:
     handler: src/graphql/graphql.graphql
     events:
       - http:
-          path: graphql
+          path: movies/graphql
           method: get
           cors: true
       - http:
-          path: graphql
+          path: movies/graphql
           method: post
           cors: true
+          authorizer: authorize
 
   list:
     handler: src/list.list
