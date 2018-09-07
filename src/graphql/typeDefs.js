@@ -10,14 +10,14 @@ module.exports = gql`
   input CreateMovieInput {
     title: String!
     format: Formats!
-    length: String! @contraint(pattern: "/ mins$/")
+    length: String! @contraint(pattern: "/ min$/")
     releaseYear: Int! @constraint(min: 1900, max: 2100)
     rating: Int! @constraint(min: 1, max: 5)
   }
 
   input UpdateMovieInput {
     format: Formats
-    length: String @contraint(pattern: "/ mins$/")
+    length: String @contraint(pattern: "/ min$/")
     releaseYear: Int @constraint(min: 1900, max: 2100)
     rating: Int
   }
@@ -25,7 +25,7 @@ module.exports = gql`
   type Movie {
     title: String
     format: Formats
-    length: String @contraint(pattern: "/ mins$/")
+    length: String @contraint(pattern: "/ min$/")
     releaseYear: Int @constraint(min: 1900, max: 2100)
     rating: Int
   }
