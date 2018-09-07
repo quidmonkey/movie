@@ -22,7 +22,6 @@ const getOpts = (opts) => {
 };
 
 const loadMovies = async () => {
-
   const file = fs.readFileSync('movies.json', 'utf8');
   const { movies } = JSON.parse(file);
   const user = {
