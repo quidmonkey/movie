@@ -5,14 +5,31 @@
 const aws = require('aws-sdk-mock');
 const faker = require('faker');
 
-process.env.DYNAMODB_MOVIES_TABLE = faker.random.word();
 
-// mock getters
+/////////////////////////////////////////
+// Mocked Env Vars
+process.env.DYNAMODB_MOVIES_TABLE = faker.random.word();
+process.env.DYNAMODB_USER_TABLE = faker.random.word();
+
+
+
+/////////////////////////////////////////
+// Mock Utils
 const FORMAT_TYPES = ['Blu-Ray', 'DVD', 'Streaming'];
+
+/**
+ * Get a random mock movie format
+ * @return {string} Movie format
+ */
 const getMockFormat = () => {
   const index = Math.floor(Math.random() * FORMAT_TYPES.length);
   return FORMAT_TYPES[index];
 }
+
+/**
+ * Get a mock movie model
+ * @return {Object} Mock movie model
+ */
 const getMockMovie = () => {
   return {
     format: getMockFormat(),
@@ -23,7 +40,23 @@ const getMockMovie = () => {
 };
 module.exports.getMockMovie = getMockMovie;
 
-// created mocks
+/**
+ * Get a mock user model
+ * @return {Object} Mock user model
+ */
+const getMockUser = () => {
+  return {
+    username: Date.now().toString(),
+    password: Date.now().toString(),
+    scopes: ['*']
+  };
+};
+module.exports.getMockUser = getMockUser;
+
+
+
+/////////////////////////////////////////
+// Created Mocks
 const mockMovieOne = getMockMovie();
 const mockMovieTwo = getMockMovie();
 
@@ -48,7 +81,10 @@ const mockTableSchema = {
 };
 module.exports.mockTableSchema = mockTableSchema;
 
-// aws mocks
+
+
+/////////////////////////////////////////
+// AWS Mocks
 aws.mock('DynamoDB', 'describeTable', async (params) => {
   if (process.env.DYNAMODB_MOVIES_TABLE === 'error') {
     throw new Error('Internal Server Error');
@@ -83,7 +119,9 @@ aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
 });
 
 aws.mock('DynamoDB.DocumentClient', 'put', async (params) => {
-  if (params.Item.title === 'error') {
+  if (
+    process.env.DYNAMODB_MOVIES_TABLE === 'error' || process.env.DYNAMODB_USER_TABLE === 'error'
+  ) {
     throw new Error('Internal Server Error');
   }
 

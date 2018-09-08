@@ -28,8 +28,11 @@ it('create - should fail on an invalid request', async () => {
 });
 
 it('create - should fail on a DynamoDB error', async () => {
+  const oldMoviesTable = process.env.DYNAMODB_MOVIES_TABLE;
+
+  process.env.DYNAMODB_MOVIES_TABLE = 'error';
+  
   const movie = getMockMovie();
-  movie.title = 'error';
   const event = {
     body: JSON.stringify(movie)
   };
@@ -37,4 +40,6 @@ it('create - should fail on a DynamoDB error', async () => {
 
   expect(res.statusCode).toBe(501);
   expect(res.body).toBe('Couldn\'t create the movie.');
+
+  process.env.DYNAMODB_MOVIES_TABLE = oldMoviesTable;
 });
