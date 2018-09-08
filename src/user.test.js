@@ -11,6 +11,22 @@ it('user - should create a user', async () => {
   expect(JSON.parse(res.body)).toBe('User created successfully.');
 });
 
+it('user - should create a user with no scopes', async () => {
+  const { username, password } = mockUser;
+  const noScopedMockUser = {
+    username,
+    password
+  };
+  const event = {
+    body: JSON.stringify(noScopedMockUser)
+  };
+  const res = await user(event);
+
+  expect(res.statusCode).toBe(200);
+  expect(JSON.parse(res.body)).toBe('User created successfully.');
+});
+
+
 it('user - should fail on an invalid request', async () => {
   const event = {
     body: JSON.stringify({})
