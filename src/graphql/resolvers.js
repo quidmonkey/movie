@@ -145,6 +145,7 @@ module.exports.updateMovie = updateMovie;
  * GraphQL Resolvers
  * @type {Object} resolvers
  */
+/* istanbul ignore next */
 module.exports.resolvers = {
   Formats: {
     BLURAY: 'Blu-Ray',
