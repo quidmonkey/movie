@@ -1,10 +1,9 @@
 const { argv } = require('yargs');
 const faker = require('faker');
-const fetch = require('node-fetch');
 const fs = require('fs');
 const https = require('https');
 
-const { merge } = require('../src/utils');
+const { merge, req } = require('../src/utils');
 
 const { domain } = argv;
 const GRAPHQL_FORMATS = ['BLURAY', 'DVD', 'STREAMING'];
@@ -78,15 +77,16 @@ const getToken = async () => {
     method: 'POST',
     body: JSON.stringify(user)
   });
+  const userUrl = getURL('/movies/user');
 
-  const userRes = await fetch(getURL('/movies/user'), opts);
-  console.log('~~~ userRes', await userRes.json());
+  const userRes = await req(userUrl, opts);
+  console.log('~~~ userRes', userRes);
 
-  const tokenRes = await fetch(getURL('/movies/token'), opts);
-  const { token } = await tokenRes.json();
-  console.log('~~~ token', token);
+  const tokenUrl = getURL('/movies/token');
+  const tokenRes = await req(tokenUrl, opts);
+  console.log('~~~ tokenRes', tokenRes);
 
-  return token;
+  return tokenRes;
 };
 module.exports.getToken = getToken;
 
