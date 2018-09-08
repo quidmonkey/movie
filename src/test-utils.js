@@ -36,13 +36,20 @@ aws.mock('DynamoDB.DocumentClient', 'delete', async (params) => {
   return 'Success';
 });
 aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
-  if (params.Key.title === 'error') {
+  const { title } = params.Key;
+  const res = {};
+  
+  if (title === 'error') {
     throw new Error('Internal Server Error');
   }
   
-  return {
-    Item: params.Key.title === mockMovieOne.title ? mockMovieOne : mockMovieTwo
-  };
+  if (title === mockMovieOne.title) {
+    res.Item = mockMovieOne;
+  } else if (title === mockMovieTwo.title) {
+    res.Item = mockMovieTwo;
+  }
+
+  return res;
 });
 aws.mock('DynamoDB.DocumentClient', 'put', async (params) => {
   if (params.Item.title === 'error') {
