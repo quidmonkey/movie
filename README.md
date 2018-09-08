@@ -97,6 +97,8 @@ endpoints:
   POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies
   DELETE - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/{title}
   GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/{title}
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/graphql
+  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/graphql
   GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies
   GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/schema
   POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/token
@@ -107,7 +109,7 @@ functions:
   create: movies-prod-create
   delete: movies-prod-delete
   get: movies-prod-get
-  graphql: movies-graphql-post
+  graphql: movies-prod-graphql
   list: movies-prod-list
   schema: movies-prod-schema
   token: movies-prod-token
