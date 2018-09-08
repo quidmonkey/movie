@@ -2,6 +2,7 @@ const faker = require('faker');
 
 const {
   getMockMovie,
+  getRandomMockedMovie,
   mockMovieOne,
   mockMovieTwo
 } = require('../test-utils');
@@ -28,7 +29,7 @@ it('createMovie - should create a new movie DynamoDb entry', async () => {
 });
 
 it('getMovie - should get a movie by its title', async () => {
-  const movie = Math.random() > 0.5 ? mockMovieOne : mockMovieTwo;
+  const movie = getRandomMockedMovie();
   const res = await getMovie(movie);
 
   expect(res).toEqual(movie);

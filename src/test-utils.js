@@ -28,6 +28,11 @@ mockMovieTwo.title = faker.random.word();
 module.exports.mockMovieOne = mockMovieOne;
 module.exports.mockMovieTwo = mockMovieTwo;
 
+const getRandomMockedMovie = () => {
+  return Math.random() > 0.5 ? mockMovieOne : mockMovieTwo;
+};
+module.exports.getRandomMockedMovie = getRandomMockedMovie;
+
 aws.mock('DynamoDB.DocumentClient', 'delete', async (params) => {
   if (params.Key.title === 'error') {
     throw new Error('Internal Server Error');

@@ -1,15 +1,16 @@
-const { getMockMovie, mockMovieOne } = require('./test-utils');
+const { getMockMovie, getRandomMockedMovie } = require('./test-utils');
 const { create } = require('./create');
 
 it('create - should create a movie', async () => {
+  const movie = getRandomMockedMovie();
   const event = {
-    body: JSON.stringify(mockMovieOne)
+    body: JSON.stringify(movie)
   };
   const res = await create(event);
 
   expect(res.statusCode).toBe(200);
 
-  const expected = Object.keys(mockMovieOne).concat(['id', 'createdAt', 'updatedAt']).sort();
+  const expected = Object.keys(movie).concat(['id', 'createdAt', 'updatedAt']).sort();
   const actual = Object.keys(JSON.parse(res.body)).sort();
 
   expect(actual).toEqual(expected);

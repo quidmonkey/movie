@@ -1,16 +1,17 @@
-const { mockMovieOne } = require('./test-utils');
+const { getRandomMockedMovie } = require('./test-utils');
 const { get } = require('./get');
 
 it('get - should get a movie', async () => {
+  const movie = getRandomMockedMovie();
   const event = {
     pathParameters: {
-      title: mockMovieOne.title
+      title: movie.title
     }
   };
   const res = await get(event);
 
   expect(res.statusCode).toBe(200);
-  expect(JSON.parse(res.body)).toEqual(mockMovieOne);
+  expect(JSON.parse(res.body)).toEqual(movie);
 });
 
 it('get - should return a 404 if no movie is found', async () => {
