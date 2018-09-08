@@ -7,6 +7,12 @@ custom:
     start:
       inMemory: true
       migrate: true
+      seed: true
+    seed:
+      local:
+        sources:
+          - table: ${self:provider.environment.DYNAMODB_MOVIES_TABLE}
+            sources: [./movies-seed.json]
   secrets: ${file(auth/secrets.json)}
   serverless-offline:
     httpsProtocol: 'auth'
