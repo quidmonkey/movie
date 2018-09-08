@@ -1,22 +1,26 @@
-const fetch = require('node-fetch');
-
 const {
   getOpts,
   getToken,
   getURL
 } = require('./misc-utils');
 
+const { req } = require('../src/utils');
+
 const listMovies = async () => {
   const token = await getToken();
+  const url = getURL('/movies');
 
-  const listOpts = getOpts({
+  const opts = getOpts({
     headers: {
       Authorization: token
     }
   });
-  const res = await fetch(getURL('/movies'), listOpts);
+  const res = await req(url, opts);
 
-  console.log('~~~ res', await res.json());
+  console.log('~~~ res', JSON.stringify(res, null, 2));
 };
+module.exports.listMovies = listMovies;
 
-listMovies();
+if (!module.parent) {
+  listMovies();
+}

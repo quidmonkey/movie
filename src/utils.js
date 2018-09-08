@@ -41,6 +41,27 @@ const getNoCacheUrl = (url) => {
 module.exports.getNoCacheUrl = getNoCacheUrl;
 
 /**
+ * Wraps a request with proper no caching,
+ * HTTPS cert, & error handling, then returns the
+ * json response with camel-cased keys.
+ * @param {string} url        URL
+ * @param {Object} document   GraphQL document
+ * @param {Object} [opts]     Fetch options
+ * @return {*}                Response
+ */
+const graphqlReq = async (url, document, opts) => {
+  const mergedOpts = merge(opts, {
+    method: 'POST',
+    body: JSON.stringify(document)
+  });
+
+  const res = await req(url, mergedOpts);
+
+  return res;
+};
+module.exports.graphqlReq = graphqlReq;
+
+/**
  * Adds the HTTPS agent to the fetch request options
  * @param {Object} opts Fetch request options
  * @return {Object}     HTTPS fetch request options
@@ -100,9 +121,9 @@ module.exports.merge = merge;
  * Wraps a request with proper no caching,
  * HTTPS cert, & error handling, then returns the
  * json response with camel-cased keys.
- * @param {string} url  URL
- * @param {Object} opts Fetch options
- * @return {*}          Response
+ * @param {string} url    URL
+ * @param {Object} [opts] Fetch options
+ * @return {*}            Response
  */
 const req = async (url, opts) => {
   const noCacheUrl = getNoCacheUrl(url);

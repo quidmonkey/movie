@@ -1,33 +1,16 @@
-const { req } = require('../src/utils');
-
-const graphqlRequest = async (url, document) => {
-  const data = {
-    query: document
-  };
-  const opts = {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  const res = await req(url, opts);
-
-  console.log('~~~ res', res);
-
-  return res;
-};
+const { graphqlReq } = require('../src/utils');
 
 const main = async () => {
-  const url = 'https://localhost:3000/graphql';
-  const document = `{
+  const url = 'https://localhost:3000/movies/graphql';
+  const query = `{
     movies {
       title
     }
   }`;
 
-  await graphqlRequest(url, document);
+  const res = await graphqlReq(url, { query });
+
+  console.log('~~~ res', JSON.stringify(res, null, 2));
 };
 
 main();

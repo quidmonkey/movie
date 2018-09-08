@@ -1,37 +1,35 @@
-const fetch = require('node-fetch');
-
 const {
-  getMovie,
-  getOpts,
+  getGraphQLMovie,
   getToken,
   getURL
 } = require('./misc-utils');
+const { graphqlReq } = require('../src/utils');
 
 const loadGraphQLMovies = async () => {
+  const url = getURL('/movies/graphql');
   const token = await getToken();
 
   for (let i = 0; i < 5; i++) {
-    const movie = getMovie();
+    const movie = getGraphQLMovie();
     const query = `mutation CreateMovie($movie: CreateMovieInput) {
       createMovie(movie: $movie) {
         title
       }
     }`;
-    const opts = getOpts({
-      method: 'POST',
-      body: JSON.stringify({
-        query,
-        variables: {
-          movie
-        }
-      }),
+    const document = {
+      query,
+      variables: {
+        movie
+      }
+    };
+    const opts = {
       headers: {
         Authorization: token
       }
-    });
+    };
+    const res = await graphqlReq(url, document, opts);
 
-    const movieRes = await fetch(getURL('/movies/graphql'), opts);
-    console.log('~~~ movieRes', await movieRes.json());
+    console.log('~~~ res', JSON.stringify(res, null, 2));
   }
 };
 module.exports.loadGraphQLMovies = loadGraphQLMovies;

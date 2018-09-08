@@ -9,6 +9,7 @@ const {
   getIAMPolicy,
   getNoCacheUrl,
   getHTTPSOpts,
+  graphqlReq,
   HTTPSAgent,
   isAuthorized,
   merge,
@@ -72,6 +73,62 @@ it('getHTTPSOpts - should get a fetch request options that are HTTPS ready', () 
     body: opts.body
   }, HTTPSAgent);
   const actual = getHTTPSOpts(opts);
+
+  expect(actual).toEqual(expected);
+});
+
+it('graphqlReq - should make a GraphQL request', async () => {
+  const expected = { foo: 'bar' };
+
+  const document = {
+    query: '{ \
+      data \
+    }'
+  };
+  const url = 'http://www.foobar.com';
+
+  fetch.mockResponse(JSON.stringify(expected));
+
+  const actual = await graphqlReq(url, document);
+
+  expect(actual).toEqual(expected);
+});
+
+it('graphqlReq - should make a GraphQL request with fetch options', async () => {
+  const expected = { foo: 'bar' };
+
+  const document = {
+    query: '{ \
+      data \
+    }'
+  };
+  const url = 'https://www.foobar.com';
+  const opts = {
+    headers: {
+      foo: 'bar'
+    }
+  };
+
+  fetch.mockResponse(JSON.stringify(expected));
+
+  const actual = await graphqlReq(url, document, opts);
+
+  expect(actual).toEqual(expected);
+});
+
+it('graphqlReq - should make a secure GraphQL request', async () => {
+  const expected = { foo: 'bar' };
+
+  const document = {
+    query: '{ \
+      data \
+    }'
+  };
+  const url = 'https://www.foobar.com';
+
+  fetch.mockResponse(JSON.stringify(expected));
+
+  const actual = await graphqlReq(url, document);
 
   expect(actual).toEqual(expected);
 });

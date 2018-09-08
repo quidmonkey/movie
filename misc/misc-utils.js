@@ -7,17 +7,34 @@ const https = require('https');
 const { merge } = require('../src/utils');
 
 const { domain } = argv;
-const FORMATS = ['BLURAY', 'DVD', 'STREAMING'];
+const GRAPHQL_FORMATS = ['BLURAY', 'DVD', 'STREAMING'];
+const FORMATS = ['Blu-Ray', 'DVD', 'Streaming'];
 
 /**
- * Get a Movie Format
- * @return {string} Movie format
+ * Get a randomly selected movie format
+ * @param {Array<string>} formats Movie formats
+ * @return {string}               Movie format
  */
-const getFormat = () => {
-  const index = Math.floor(Math.random() * FORMATS.length);
-  return FORMATS[index];
+const getFormat = (formats) => {
+  const index = Math.floor(Math.random() * formats.length);
+  return formats[index];
 };
 module.exports.getFormat = getFormat;
+
+/**
+ * Get a Movie model
+ * @return {Object} Movie model
+ */
+const getGraphQLMovie = () => {
+  return {
+    title: faker.random.word(),
+    format: getFormat(GRAPHQL_FORMATS),
+    length: `${Math.round(Math.random() * 999)} min`,
+    releaseYear: 1900 + Math.round(Math.random() * 200),
+    rating: 1 + Math.round(Math.random() * 4)
+  };
+};
+module.exports.getGraphQLMovie = getGraphQLMovie;
 
 /**
  * Get a Movie model
@@ -26,7 +43,7 @@ module.exports.getFormat = getFormat;
 const getMovie = () => {
   return {
     title: faker.random.word(),
-    format: getFormat(),
+    format: getFormat(FORMATS),
     length: `${Math.round(Math.random() * 999)} min`,
     releaseYear: 1900 + Math.round(Math.random() * 200),
     rating: 1 + Math.round(Math.random() * 4)
