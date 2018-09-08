@@ -1,8 +1,4 @@
-const {
-  getMockMovie,
-  mockMovieOne
-} = require('./test-utils');
-
+const { getMockMovie, mockMovieOne } = require('./test-utils');
 const { create } = require('./create');
 
 it('create - should create a movie', async () => {

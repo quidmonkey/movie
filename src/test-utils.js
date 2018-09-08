@@ -28,20 +28,28 @@ mockMovieTwo.title = faker.random.word();
 module.exports.mockMovieOne = mockMovieOne;
 module.exports.mockMovieTwo = mockMovieTwo;
 
-const mockPutRes = 'Success';
-module.exports.mockPutRes = mockPutRes;
+aws.mock('DynamoDB.DocumentClient', 'delete', async (params) => {
+  if (params.Key.title === 'error') {
+    throw new Error('Internal Server Error');
+  }
 
+  return 'Success';
+});
+aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
+  if (params.Key.title === 'error') {
+    throw new Error('Internal Server Error');
+  }
+  
+  return {
+    Item: params.Key.title === mockMovieOne.title ? mockMovieOne : mockMovieTwo
+  };
+});
 aws.mock('DynamoDB.DocumentClient', 'put', async (params) => {
   if (params.Item.title === 'error') {
     throw new Error('Internal Server Error');
   }
 
-  return mockPutRes;
-});
-aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
-  return {
-    Item: params.Key.title === mockMovieOne.title ? mockMovieOne : mockMovieTwo
-  };
+  return 'Success';
 });
 aws.mock('DynamoDB.DocumentClient', 'scan', { Items: [mockMovieOne, mockMovieTwo] });
 aws.mock('DynamoDB.DocumentClient', 'update', async (params) => {
