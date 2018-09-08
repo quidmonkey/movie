@@ -1,44 +1,10 @@
-const aws = require('aws-sdk-mock');
 const faker = require('faker');
 
-process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
-
-const mockFormatTypes = ['BLURAY', 'DVD', 'STREAMING'];
-const getMockFormat = (index) => mockFormatTypes[index];
-const getMockMovie = () => {
-  return {
-    format: getMockFormat(Math.round(Math.random() * mockFormatTypes.length)),
-    length: `${Math.round(Math.random() * 300)} min`,
-    releaseYear: 1900 + Math.round(Math.random() * 200),
-    rating: 1 + Math.round(Math.random() * 4)
-  };
-};
-
-const mockMovieOne = getMockMovie();
-const mockMovieTwo = getMockMovie();
-
-mockMovieOne.title = faker.random.word();
-mockMovieTwo.title = faker.random.word();
-
-// needs to be mocked out prior to serverless-dynamodb-client being required
-aws.mock('DynamoDB.DocumentClient', 'put', 'Success');
-aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
-  return {
-    Item: params.Key.title === mockMovieOne.title ? mockMovieOne : mockMovieTwo
-  };
-});
-aws.mock('DynamoDB.DocumentClient', 'scan', { Items: [mockMovieOne, mockMovieTwo] });
-aws.mock('DynamoDB.DocumentClient', 'update', async (params) => {
-  const keys = Object.values(params.ExpressionAttributeNames);
-  const values = Object.values(params.ExpressionAttributeValues);
-
-  const Attributes = keys.reduce((hash, key, index) => {
-    hash[key] = values[index];
-    return hash;
-  }, {});
-
-  return { Attributes };
-});
+const {
+  getMockMovie,
+  mockMovieOne,
+  mockMovieTwo
+} = require('../mock-dynamodb-utils');
 
 const {
   createMovie,
@@ -49,6 +15,7 @@ const {
   getMovieUpdateExpression,
   updateMovie
 } = require('./resolvers');
+
 
 it('createMovie - should create a new movie DynamoDb entry', async () => {
   const movie = getMockMovie();
