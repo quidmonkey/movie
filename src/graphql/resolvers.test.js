@@ -4,7 +4,7 @@ const {
   getMockMovie,
   mockMovieOne,
   mockMovieTwo
-} = require('../mock-dynamodb-utils');
+} = require('../test-utils');
 
 const {
   createMovie,

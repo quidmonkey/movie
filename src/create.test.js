@@ -1,7 +1,7 @@
 const {
   getMockMovie,
   mockMovieOne
-} = require('./mock-dynamodb-utils');
+} = require('./test-utils');
 
 const { create } = require('./create');
 

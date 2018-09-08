@@ -1,76 +1,57 @@
-const fs = require('fs');
+/**
+ * This file needs to be required prior to serverless-dynamodb-client
+ * being required in order to mock out the aws-sdk
+ */
+const aws = require('aws-sdk-mock');
+const faker = require('faker');
 
-const { req } = require('./utils');
+process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
 
-const origin = 'https://localhost:3000';
-module.exports.origin = origin;
-
-const file = fs.readFileSync('movies.json', 'utf8');
-const { movies } = JSON.parse(file);
-module.exports.movies = movies;
-
-const createMovie = async (movieModel) => {
-  const token = await getToken();
-  const url = getURL('/movies');
-  const opts = {
-    method: 'POST',
-    body: JSON.stringify(movieModel),
-    headers: {
-      Authorization: token
-    }
+const GRAPHQL_FORMAT_TYPES = ['Blu-Ray', 'DVD', 'Streaming'];
+const getMockFormat = (index) => GRAPHQL_FORMAT_TYPES[index];
+const getMockMovie = () => {
+  return {
+    format: getMockFormat(Math.round(Math.random() * GRAPHQL_FORMAT_TYPES.length)),
+    length: `${Math.round(Math.random() * 300)} min`,
+    releaseYear: 1900 + Math.round(Math.random() * 200),
+    rating: 1 + Math.round(Math.random() * 4)
   };
-
-  const movie = await req(url, opts);
-
-  return { movie, token };
 };
-module.exports.createMovie = createMovie;
+module.exports.getMockMovie = getMockMovie;
 
-const getMovieAttr = () => {
-  const movie = getMovieModel();
-  const attrs = Object.keys(movie);
-  const i = Math.floor(Math.random() * attrs.length);
+const mockMovieOne = getMockMovie();
+const mockMovieTwo = getMockMovie();
 
-  return attrs[i];
-};
-module.exports.getMovieAttr = getMovieAttr;
+mockMovieOne.title = faker.random.word();
+mockMovieTwo.title = faker.random.word();
 
-const getMovieModel = () => {
-  const i = Math.floor(Math.random() * movies.length);
-  return {...movies[i]};  // clone
-};
-module.exports.getMovieModel = getMovieModel;
+module.exports.mockMovieOne = mockMovieOne;
+module.exports.mockMovieTwo = mockMovieTwo;
 
-const getToken = async () => {
-  const { user } = await getUser();
-  const url = getURL('/movies/token');
-  const opts = {
-    method: 'POST',
-    body: JSON.stringify(user)
+const mockPutRes = 'Success';
+module.exports.mockPutRes = mockPutRes;
+
+aws.mock('DynamoDB.DocumentClient', 'put', async (params) => {
+  if (params.Item.title === 'error') {
+    throw new Error('Internal Server Error');
+  }
+
+  return mockPutRes;
+});
+aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
+  return {
+    Item: params.Key.title === mockMovieOne.title ? mockMovieOne : mockMovieTwo
   };
-  const { token } = await req(url, opts);
+});
+aws.mock('DynamoDB.DocumentClient', 'scan', { Items: [mockMovieOne, mockMovieTwo] });
+aws.mock('DynamoDB.DocumentClient', 'update', async (params) => {
+  const keys = Object.values(params.ExpressionAttributeNames);
+  const values = Object.values(params.ExpressionAttributeValues);
 
-  return token;
-};
-module.exports.getToken = getToken;
+  const Attributes = keys.reduce((hash, key, index) => {
+    hash[key] = values[index];
+    return hash;
+  }, {});
 
-const getURL = (uri) => {
-  return `${origin}${uri}`;
-};
-module.exports.getURL = getURL;
-
-const getUser = async () => {
-  const user = {
-    username: Date.now().toString(),
-    password: Date.now().toString()
-  };
-  const url = getURL('/movies/user');
-  const opts = {
-    method: 'POST',
-    body: JSON.stringify(user)
-  };
-  const res = await req(url, opts);
-
-  return { res, user };
-};
-module.exports.getUser = getUser;
+  return { Attributes };
+});
