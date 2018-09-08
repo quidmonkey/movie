@@ -65,9 +65,12 @@ mockMovieTwo.title = faker.random.word();
 
 const mockMovieList = [mockMovieOne, mockMovieTwo];
 
+const mockUser = getMockUser();
+
 module.exports.mockMovieOne = mockMovieOne;
 module.exports.mockMovieTwo = mockMovieTwo;
 module.exports.mockMovieList = mockMovieList;
+module.exports.mockUser = mockUser;
 
 const getRandomMockedMovie = () => {
   return Math.random() > 0.5 ? mockMovieOne : mockMovieTwo;
@@ -102,17 +105,23 @@ aws.mock('DynamoDB.DocumentClient', 'delete', async (params) => {
 });
 
 aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
-  const { title } = params.Key;
+  const { title, username } = params.Key;
   const res = {};
   
-  if (title === 'error') {
+  if (
+    process.env.DYNAMODB_MOVIES_TABLE === 'error' || process.env.DYNAMODB_USER_TABLE === 'error'
+  ) {
     throw new Error('Internal Server Error');
   }
   
-  if (title === mockMovieOne.title) {
-    res.Item = mockMovieOne;
-  } else if (title === mockMovieTwo.title) {
-    res.Item = mockMovieTwo;
+  if (title) {
+    if (title === mockMovieOne.title) {
+      res.Item = mockMovieOne;
+    } else if (title === mockMovieTwo.title) {
+      res.Item = mockMovieTwo;
+    }
+  } else if (username) {
+    res.Item = mockUser;
   }
 
   return res;

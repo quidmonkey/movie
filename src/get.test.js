@@ -27,13 +27,19 @@ it('get - should return a 404 if no movie is found', async () => {
 });
 
 it('get - should fail on a DynamoDB error', async () => {
+  const oldMoviesTable = process.env.DYNAMODB_MOVIES_TABLE;
+
+  process.env.DYNAMODB_MOVIES_TABLE = 'error';
+  
   const event = {
     pathParameters: {
-      title: 'error'
+      title: 'foobar'
     }
   };
   const res = await get(event);
 
   expect(res.statusCode).toBe(501);
   expect(res.body).toBe('Couldn\'t fetch the movie.');
+
+  process.env.DYNAMODB_MOVIES_TABLE = oldMoviesTable;
 });
