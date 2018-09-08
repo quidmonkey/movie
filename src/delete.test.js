@@ -1,5 +1,7 @@
 const faker = require('faker');
 
+require('./test-utils');
+
 const del = require('./delete');
 
 it('delete - should delete a movie', async () => {

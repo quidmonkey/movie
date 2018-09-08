@@ -32,7 +32,7 @@ it('create - should fail on a DynamoDB error', async () => {
 
   process.env.DYNAMODB_MOVIES_TABLE = 'error';
   
-  const movie = getMockMovie();
+  const movie = getRandomMockedMovie();
   const event = {
     body: JSON.stringify(movie)
   };
