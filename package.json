@@ -28,11 +28,10 @@
     "dev": "AWS_SDK_LOAD_CONFIG=1 serverless offline start --noAuth",
     "kill-dynamo": "ps aux | grep dynamodb | grep -v grep | awk '{ print $2 }' | xargs kill",
     "lint": "eslint --fix --quiet --ignore-path .eslintignore src/**/*.js",
-    "quality": "AWS_SDK_LOAD_CONFIG=1 serverless offline --exec 'npm run coverage' start && npm run kill-dynamo",
     "prepush": "npm run validate",
     "postinstall": "auth/create-secret.sh && serverless dynamodb install",
     "test": "jest --verbose --watch",
-    "validate": "cross-env CI=true npm-run-all --parallel lint quality"
+    "validate": "cross-env CI=true npm-run-all --parallel lint coverage"
   },
   "devDependencies": {
     "aws-sdk-mock": "^4.1.0",
