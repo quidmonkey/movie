@@ -7,7 +7,7 @@ layout: Doc
 
 This is a fork of the Serverless [aws-node-rest-api-with-dynamodb](https://github.com/serverless/examples/tree/master/aws-node-rest-api-with-dynamodb) project.
 
-This project is a CRUD Rest API for a movies database that uses AWS Lambdas, SSM (Secrets), DynamoDB, and the API Gateway. It is written in Node 8.10.3, and makes use of async/await. It uses ESLint, Jest, and Husky to lint, test (both unit & integration with coverage reports), and add git hooks for code quality. It features HTTPS + JWT for authentication & authorization. A self-signed cert is provided for localhost requests (local development).
+This project is a CRUD Rest & GraphQL APIs for a movies database that uses AWS Lambdas, SSM (Secrets), DynamoDB, and the API Gateway. It is written in Node 8.10.3, and makes use of async/await. It features full linting and 100% test coverage, both enforced using pre-push hooks. This is done using ESLint, Jest, and Husky. It features HTTPS + JWT for authentication & authorization. A self-signed cert is provided for localhost requests (local development).
 
 ## Structure
 
@@ -32,7 +32,7 @@ npm install
 
 This will run install all Node & serverless dependencies, and generate an auth/secrets.json file for you to use. You can replace this file at any time with your own secret value.
 
-## Usage
+## Rest API Usage
 
 Run tests using the following command:
 ```bash
@@ -44,29 +44,43 @@ Run serverless locally with the following command:
 npm run dev
 ```
 
-Once serverless-offline is up & running, you can populate DynamoDB with the following command:
-```bash
-node misc/load-movies.js
-```
+When running serverless locally, the DynamoDB instance will be seeded with the data found in movies.json.
 
 After this you can read the movie data using this cmd:
 ```bash
 node misc/get-movies.js
 ```
 
+You can load random movie data using this cmd:
+```bash
+node misc/load-movies.js
+```
+
 Both the get-movies.js and load-movies.js both take an optional ```--domain``` arg that lets you specify an origin. By default, this is localhost; but once you deploy your Lambdas, you can specify the API Gateway endpoints:
 ```bash 
-node misc/load-movies.js --domain https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev
+node misc/get-movies.js --domain https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev
 ```
 
 Inspect the package.json file for additional npm run scripts.
+
+## GraphQL API Usage
+
+You can read movie using this cmd:
+```bash
+node misc/get-graphql-movies.js
+```
+
+You can load random movie data using this cmd:
+```bash
+node misc/load-graphql-movies.js
+```
 
 ## Deploy
 
 In order to deploy the endpoint simply run
 
 ```bash
-npm run build
+npm run build-prod
 ```
 
 The expected result should be similar to:
@@ -74,35 +88,36 @@ The expected result should be similar to:
 ```bash
 Service Information
 service: movies
-stage: dev
+stage: prod
 region: us-east-1
-stack: movies-dev
+stack: movies-prod
 api keys:
   None
 endpoints:
-  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies
-  DELETE - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
-  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
-  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies
-  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/schema
-  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/token
-  PUT - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/{title}
-  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/dev/movies/user
+  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies
+  DELETE - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/{title}
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/{title}
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies
+  GET - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/schema
+  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/token
+  PUT - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/{title}
+  POST - https://5lpvwzfvzi.execute-api.us-east-1.amazonaws.com/prod/movies/user
 functions:
-  authorize: movies-dev-authorize
-  create: movies-dev-create
-  delete: movies-dev-delete
-  get: movies-dev-get
-  list: movies-dev-list
-  schema: movies-dev-schema
-  token: movies-dev-token
-  update: movies-dev-update
-  user: movies-dev-user
+  authorize: movies-prod-authorize
+  create: movies-prod-create
+  delete: movies-prod-delete
+  get: movies-prod-get
+  graphql: movies-graphql-post
+  list: movies-prod-list
+  schema: movies-prod-schema
+  token: movies-prod-token
+  update: movies-prod-update
+  user: movies-prod-user
 
   Serverless: Removing old service artifacts from S3...
 ```
 
-## API
+## Rest API with Curl
 
 You can create a user and get a token locally with the following commands:
 
