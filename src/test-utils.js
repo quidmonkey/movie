@@ -5,7 +5,7 @@
 const aws = require('aws-sdk-mock');
 const faker = require('faker');
 
-process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
+process.env.DYNAMODB_MOVIES_TABLE = faker.random.word();
 
 // mock getters
 const GRAPHQL_FORMAT_TYPES = ['Blu-Ray', 'DVD', 'Streaming'];
@@ -38,7 +38,22 @@ const getRandomMockedMovie = () => {
 };
 module.exports.getRandomMockedMovie = getRandomMockedMovie;
 
+const mockTableSchema = {
+  table: {
+    tableName: process.env.DYNAMODB_MOVIES_TABLE
+  }
+};
+module.exports.mockTableSchema = mockTableSchema;
+
 // aws mocks
+aws.mock('DynamoDB', 'describeTable', async (params) => {
+  if (process.env.DYNAMODB_MOVIES_TABLE === 'error') {
+    throw new Error('Internal Server Error');
+  }
+
+  return mockTableSchema;
+});
+
 aws.mock('DynamoDB.DocumentClient', 'delete', async (params) => {
   if (params.Key.title === 'error') {
     throw new Error('Internal Server Error');
@@ -46,6 +61,7 @@ aws.mock('DynamoDB.DocumentClient', 'delete', async (params) => {
 
   return 'Success';
 });
+
 aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
   const { title } = params.Key;
   const res = {};
@@ -62,6 +78,7 @@ aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
 
   return res;
 });
+
 aws.mock('DynamoDB.DocumentClient', 'put', async (params) => {
   if (params.Item.title === 'error') {
     throw new Error('Internal Server Error');
@@ -69,6 +86,7 @@ aws.mock('DynamoDB.DocumentClient', 'put', async (params) => {
 
   return 'Success';
 });
+
 aws.mock('DynamoDB.DocumentClient', 'scan', async (params) => {
   if (process.env.DYNAMODB_MOVIES_TABLE === 'error') {
     throw new Error('Internal Server Error');
@@ -76,6 +94,7 @@ aws.mock('DynamoDB.DocumentClient', 'scan', async (params) => {
 
   return { Items: mockMovieList };
 });
+
 aws.mock('DynamoDB.DocumentClient', 'update', async (params) => {
   const keys = Object.values(params.ExpressionAttributeNames);
   const values = Object.values(params.ExpressionAttributeValues);

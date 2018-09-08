@@ -3,7 +3,7 @@
 const ddb = require('serverless-dynamodb-client');
 const dynamoDb = ddb.raw;
 
-module.exports.schema = async (event) => {
+module.exports.schema = async () => {
   const params = {
     TableName: process.env.DYNAMODB_MOVIES_TABLE,
   };
