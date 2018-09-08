@@ -7,7 +7,7 @@ layout: Doc
 
 This is a fork of the Serverless [aws-node-rest-api-with-dynamodb](https://github.com/serverless/examples/tree/master/aws-node-rest-api-with-dynamodb) project.
 
-This project is a CRUD Rest & GraphQL APIs for a movies database that uses AWS Lambdas, SSM (Secrets), DynamoDB, and the API Gateway. It is written in Node 8.10.3, and makes use of async/await. It features full linting and 100% test coverage, both enforced using pre-push hooks. This is done using ESLint, Jest, and Husky. It features HTTPS + JWT for authentication & authorization. A self-signed cert is provided for localhost requests (local development).
+This project is a CRUD Rest & GraphQL APIs for a movies database that uses AWS Lambdas, SSM (Secrets), DynamoDB, and the API Gateway. It is written in Node 8.11.3, and makes use of async/await. It features full linting and 100% test coverage, both enforced using pre-push hooks. This is done using ESLint, Jest, and Husky. It features HTTPS + JWT for authentication & authorization. A self-signed cert is provided for localhost requests (local development).
 
 ## Structure
 
@@ -44,7 +44,7 @@ Run serverless locally with the following command:
 npm run dev
 ```
 
-When running serverless locally, the DynamoDB instance will be seeded with the data found in movies.json.
+When running serverless locally, the DynamoDB instance will be seeded with the data found in movies-seed.json.
 
 After this you can read the movie data using this cmd:
 ```bash
