@@ -47,7 +47,6 @@ module.exports.update = async (event) => {
 
   try {
     const res = await dynamoDb.update(params).promise();
-    console.log('~~~ res', res);
     return {
       statusCode: 200,
       body: JSON.stringify(res.Attributes)

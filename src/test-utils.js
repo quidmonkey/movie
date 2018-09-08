@@ -8,11 +8,14 @@ const faker = require('faker');
 process.env.DYNAMODB_MOVIES_TABLE = faker.random.word();
 
 // mock getters
-const GRAPHQL_FORMAT_TYPES = ['Blu-Ray', 'DVD', 'Streaming'];
-const getMockFormat = (index) => GRAPHQL_FORMAT_TYPES[index];
+const FORMAT_TYPES = ['Blu-Ray', 'DVD', 'Streaming'];
+const getMockFormat = () => {
+  const index = Math.floor(Math.random() * FORMAT_TYPES.length);
+  return FORMAT_TYPES[index];
+}
 const getMockMovie = () => {
   return {
-    format: getMockFormat(Math.round(Math.random() * GRAPHQL_FORMAT_TYPES.length)),
+    format: getMockFormat(),
     length: `${Math.round(Math.random() * 300)} min`,
     releaseYear: 1900 + Math.round(Math.random() * 200),
     rating: 1 + Math.round(Math.random() * 4)
@@ -96,11 +99,16 @@ aws.mock('DynamoDB.DocumentClient', 'scan', async (params) => {
 });
 
 aws.mock('DynamoDB.DocumentClient', 'update', async (params) => {
-  const keys = Object.values(params.ExpressionAttributeNames);
+  if (params.Key.title === 'error') {
+    throw new Error('Internal Server Error');
+  }
+
+  const keys = Object.keys(params.ExpressionAttributeValues);
   const values = Object.values(params.ExpressionAttributeValues);
 
   const Attributes = keys.reduce((hash, key, index) => {
-    hash[key] = values[index];
+    const correctedKey = key.replace(':', '');
+    hash[correctedKey] = values[index];
     return hash;
   }, {});
 
