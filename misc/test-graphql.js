@@ -4,7 +4,6 @@ const graphqlRequest = async (url, document) => {
   const data = {
     query: document
   };
-  console.log('~~~ data', data);
   const opts = {
     method: 'POST',
     body: JSON.stringify(data),
@@ -15,7 +14,7 @@ const graphqlRequest = async (url, document) => {
 
   const res = await req(url, opts);
 
-  console.log('~~~ graphql res', res);
+  console.log('~~~ res', res);
 
   return res;
 };
@@ -23,12 +22,8 @@ const graphqlRequest = async (url, document) => {
 const main = async () => {
   const url = 'https://localhost:3000/graphql';
   const document = `{
-    movie(title: "Star Wars: Episode IV - A New Hope"){
+    movies {
       title
-      format
-      length
-      releaseYear
-      rating
     }
   }`;
 
