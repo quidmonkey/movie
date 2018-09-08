@@ -7,6 +7,7 @@ const faker = require('faker');
 
 process.env.DYNAMODB_MOVIES_TABLE = 'foobar';
 
+// mock getters
 const GRAPHQL_FORMAT_TYPES = ['Blu-Ray', 'DVD', 'Streaming'];
 const getMockFormat = (index) => GRAPHQL_FORMAT_TYPES[index];
 const getMockMovie = () => {
@@ -19,20 +20,25 @@ const getMockMovie = () => {
 };
 module.exports.getMockMovie = getMockMovie;
 
+// created mocks
 const mockMovieOne = getMockMovie();
 const mockMovieTwo = getMockMovie();
 
 mockMovieOne.title = faker.random.word();
 mockMovieTwo.title = faker.random.word();
 
+const mockMovieList = [mockMovieOne, mockMovieTwo];
+
 module.exports.mockMovieOne = mockMovieOne;
 module.exports.mockMovieTwo = mockMovieTwo;
+module.exports.mockMovieList = mockMovieList;
 
 const getRandomMockedMovie = () => {
   return Math.random() > 0.5 ? mockMovieOne : mockMovieTwo;
 };
 module.exports.getRandomMockedMovie = getRandomMockedMovie;
 
+// aws mocks
 aws.mock('DynamoDB.DocumentClient', 'delete', async (params) => {
   if (params.Key.title === 'error') {
     throw new Error('Internal Server Error');
@@ -63,7 +69,13 @@ aws.mock('DynamoDB.DocumentClient', 'put', async (params) => {
 
   return 'Success';
 });
-aws.mock('DynamoDB.DocumentClient', 'scan', { Items: [mockMovieOne, mockMovieTwo] });
+aws.mock('DynamoDB.DocumentClient', 'scan', async (params) => {
+  if (process.env.DYNAMODB_MOVIES_TABLE === 'error') {
+    throw new Error('Internal Server Error');
+  }
+
+  return { Items: mockMovieList };
+});
 aws.mock('DynamoDB.DocumentClient', 'update', async (params) => {
   const keys = Object.values(params.ExpressionAttributeNames);
   const values = Object.values(params.ExpressionAttributeValues);
