@@ -1,8 +1,7 @@
-const { getMockUser } = require('./test-utils');
+const { getMockUser, mockUser } = require('./test-utils');
 const { user } = require('./user');
 
 it('user - should create a user', async () => {
-  const mockUser = getMockUser();
   const event = {
     body: JSON.stringify(mockUser)
   };
@@ -13,9 +12,8 @@ it('user - should create a user', async () => {
 });
 
 it('user - should fail on an invalid request', async () => {
-  const mockUser = {};
   const event = {
-    body: JSON.stringify(mockUser)
+    body: JSON.stringify({})
   };
   const res = await user(event);
 

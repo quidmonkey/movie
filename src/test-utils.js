@@ -120,7 +120,7 @@ aws.mock('DynamoDB.DocumentClient', 'get', async (params) => {
     } else if (title === mockMovieTwo.title) {
       res.Item = mockMovieTwo;
     }
-  } else if (username) {
+  } else if (username === mockUser.username) {
     res.Item = mockUser;
   }
 

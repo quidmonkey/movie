@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
 
-const { getMockUser } = require('./test-utils');
+const { getMockUser, mockUser } = require('./test-utils');
 const { token } = require('./token');
 
 it('token - should get a token', async () => {
@@ -18,7 +18,7 @@ it('token - should get a token', async () => {
     return mockTokenRes;
   });
   
-  const user = getMockUser();
+  const user = mockUser;
   const event = {
     body: JSON.stringify(user)
   };
@@ -45,12 +45,23 @@ it('token - should fail on an invalid request', async () => {
   expect(res.body).toBe('Incorrect User Data - POST Body requires a username & an alphanumeric password of at least 8 characters.');
 });
 
+it('token - should fail on missing DynamoDB data', async () => {
+  const user = getMockUser();
+  const event = {
+    body: JSON.stringify(user)
+  };
+  const res = await token(event);
+
+  expect(res.statusCode).toBe(409);
+  expect(res.body).toEqual('Unable to serve token - user does not exist.');
+});
+
 it('token - should fail on incorrect credentials', async () => {
   bcrypt.compareSync.mockImplementationOnce((...args) => {
     return false;
   });
 
-  const user = getMockUser();
+  const user = mockUser;
   const event = {
     body: JSON.stringify(user)
   };
@@ -65,7 +76,7 @@ it('token - should fail on a bad DynamoDB request', async () => {
 
   process.env.DYNAMODB_USER_TABLE = 'error';
   
-  const user = getMockUser();
+  const user = mockUser;
   const event = {
     body: JSON.stringify(user)
   };
