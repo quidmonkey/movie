@@ -157,6 +157,22 @@ it('req - should make an https fetch request', async () => {
   expect(actual).toEqual(expected);
 });
 
+it('req - should make a local https fetch request', async () => {
+  const expected = { foo: 'bar' };
+  
+  const url = 'https://localhost:3000';
+  const opts = {
+    method: 'POST',
+    body: 'foobar'
+  };
+  
+  fetch.mockResponse(JSON.stringify(expected));
+
+  const actual = await req(url, opts);
+
+  expect(actual).toEqual(expected);
+});
+
 it('req - should throw an error on a 400 or 500 level fetch response', async () => {
   const url = 'http://www.foobar.com';
   const opts = {
