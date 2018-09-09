@@ -83,10 +83,10 @@ const getToken = async () => {
   console.log('~~~ userRes', userRes);
 
   const tokenUrl = getURL('/movies/token');
-  const tokenRes = await req(tokenUrl, opts);
-  console.log('~~~ tokenRes', tokenRes);
+  const { token } = await req(tokenUrl, opts);
+  console.log('~~~ token', token);
 
-  return tokenRes;
+  return token;
 };
 module.exports.getToken = getToken;
 
