@@ -1,14 +1,23 @@
+const { getToken, getURL } = require('./misc-utils');
 const { graphqlReq } = require('../src/utils');
 
 const main = async () => {
-  const url = 'https://localhost:3000/movies/graphql';
-  const query = `{
-    movies {
-      title
+  const token = await getToken();
+  const url = getURL('/movies/graphql');
+  const document = {
+    query: `{
+      movies {
+        title
+      }
+    }`
+  };
+  const opts = {
+    headers: {
+      Authorization: token
     }
-  }`;
+  };
 
-  const res = await graphqlReq(url, { query });
+  const res = await graphqlReq(url, document, opts);
 
   console.log('~~~ res', JSON.stringify(res, null, 2));
 };
