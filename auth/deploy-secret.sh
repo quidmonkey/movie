@@ -41,7 +41,7 @@ function deploy_json_secret() {
 
   if [ -z "$AWS_SECRET" ] || [ "$LOCAL_SECRET" != "$AWS_SECRET" ]; then
     echo "~~~ Deploying New Key to SSM"
-    # aws ssm put-parameter --overwrite --name $key --type String --value $LOCAL_SECRET
+    aws ssm put-parameter --overwrite --name $key --type String --value $LOCAL_SECRET
   else
     echo "~~~ $key up-to-date. No SSM deploy needed."
   fi
