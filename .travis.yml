@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+ - "8"
+install:
+  - apt-get install uuid-runtime
+  - npm install
+before_script:
+  - bash auth/create-secret.sh
+script:
+  - npm run validate
+env:
+  - AWS_ACCESS_KEY_ID=travis
+  - AWS_SECRET_ACCESS_KEY=travis
