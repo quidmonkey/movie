@@ -2,17 +2,18 @@ dist: trusty
 sudo: required
 language: node_js
 node_js:
- - "8"
+- '8'
 cache:
   directories:
-    - node_modules
+  - node_modules
 env:
-  - AWS_ACCESS_KEY_ID="travis"
-  - AWS_SECRET_ACCESS_KEY="travis"
+  global:
+  - secure: GmQ8GHQNlRH6Wmy2lCfHbOWAc9t6xPm9wRD9hVwJLLPocXO06u7Dv0GV4EKn0yG4rk9qgoxQrViS34qUJLjF0b+R/RIIfM9QswMsfrJl25Gq9EBkKzbdGie9WpBIv/CeASl5ffIEZYlE07UDWNuain4zjoQ3Gsts/TGq6/2SkGCpJrRE/ZqlJh5x8cXB7r5wgdaPqqmnY+hOMEvZfgqGXCu2LH7oh3R7F580UaGYqfCoKSTLsdaGZ8fdqOBTXaCqYUtZWMt10ypl9gBtGz9+f/KS/KKllgFSCzm6DW8YOg3Hrwp39MR+xkHXLIqTa6Xx7gFC9ZsNSrU3+YXHDCu0Z7oiC5vvk+ToubmGxMnAypYPS2FQTHArqhN2/Oagm8KBYTzz6Dlg8MrGNAXlIZkHZIYIK8Fpyq9Gw+LWz3QzskBVQLkv714NtrgFaiZqotNwq56wuu+bC57hf9mQ2e8Y1iC9Cr4UXYprHKrAIvrj3WJUhsgoQEnHpjISonlxnBYBNvhUn9vzFA9sAZZ8g5zTNJm5YTNwx6B7fK2NtZBVtM6pMGC1ajWWvnyIU/2ubvtrz0kxo8hVFZyVr2xnrotBmZJYXvkx//keG+HeXUsZYuRDVWkNPT2fXHC1VUB5P1Mc4fGgK5/F4edbXoq8m1BDJ78JdReVN0E6NKX4fha18Vk=
+  - secure: Mu7g+eqXykkI/GNCiKAd6kTIi52NcLZ2Kyav6yijvskHe+BF5+7c83AVM5Y9I6iq6XOEtP36LJ/0GiYVdIMHbVIKKRE4DdiR3k4z2dOStP0zxs9zIyn/jsCUFchVl2w3ZsbyfNtqzZnsa71KPn0Ow4A7Rq42UJGfFrcI5adnbZtHLWLtpvlER2Ke48FdY/qtDGHKQ4UsU2vaW8zAzWfJ9DKiVs9bs9uYSzxpVk1DDUH1BxlZT+MVFtke/JOveROJcYstFmknmworwK96SEbTMN1YeN5kHfV7IFeNr8f1FEz20xwaEMLvXj5mNW3yl2mmWatWescKXrdx9tzhpaa+S2OiGr2+5bsO5cORcgGZ23htLARdlZur0OkJCjnVBFp81X+9AL84StF/ynkh9DT4zI2HtsD+VgFshkwTTDvVGwgIIlnC2HO7phIrbEeLZr7+yung94JuBr1q8ft0YgblredMOqfXDjkUpQ0UsaQsoSSDHxWVr+xHzgNt5nAurSq2BAePXvTbbBG9L0XQpflog1W/AseEXOPcAR1W1jYVJIF+WC8V4JJoHXoRVfFGhT2x9sDJpzUR3idcZX5cWCUKIByc58tYexQSZjgCQomCRNkjY5Fsh2b6Z4qOrKkWt152KBzqqHAt6XJBqF9DrhVGIT+WTYd3B8UOTXmBQwM/EZM=
 install:
-  - sudo apt-get install uuid-runtime
-  - npm install
+- sudo apt-get install uuid-runtime
+- npm install --ignore-scripts
 before_script:
-  - bash auth/create-secret.sh
+- bash auth/create-secret.sh
 script:
-  - npm run validate
+- npm run validate
