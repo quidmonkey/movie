@@ -3,7 +3,7 @@ title: AWS Serverless REST API example in NodeJS
 description: This example demonstrates how to setup a RESTful Web Service allowing you to create, list, get, update and delete movies. DynamoDB is used to store the data. 
 layout: Doc
 -->
-[![Build Status](https://travis-ci.com/quidmonkey/movies-node.svg?branch=master)](https://travis-ci.com/quidmonkey/movies-node)
+[![Build Status](https://travis-ci.com/quidmonkey/movies-node.svg?branch=master)](https://travis-ci.com/quidmonkey/movies-node) ![Functions Coverage](./badge-functions.svg?sanitize=true)
 
 # Serverless REST API
 
