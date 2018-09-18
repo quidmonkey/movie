@@ -4,7 +4,7 @@ language: node_js
 node_js:
  - "8"
 install:
-  - apt-get install uuid-runtime
+  - sudo apt-get install uuid-runtime
   - npm install
 before_script:
   - bash auth/create-secret.sh
